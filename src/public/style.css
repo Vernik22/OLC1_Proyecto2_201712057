@@ -131,8 +131,10 @@ PRE{
 }
 #textarea{
     position:absolute;
-    margin-top:40px
+    margin-top:60px;
+    padding-top: 10px
 }
+
 #wrapper .content .column2 {
     position:relative;
     float:right;

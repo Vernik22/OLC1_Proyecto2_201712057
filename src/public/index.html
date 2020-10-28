@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href="style.css" rel="stylesheet" type="text/css">
   <link rel="shortcut icon" href="img/icon.ico" />
   <title>Proyecto2_201712057</title>
 </head>
+
 <body>
 
-<div id="wrapper">
+  <div id="wrapper">
 
-<div class="content" style="width: 1200px">
-    <div class="column1" style="margin-top: 50px">
+    <div class="content" style="width: 1200px">
+      <div class="column1" style="margin-top: 40px; margin-bottom: 20px">
         <div>
-            <button type="button" class="btn btn-primary" onclick="openFile(dispFile)">Abrir</button>
-            <button type="button" class="btn btn-primary" >Guardar Entry</button>
-            <button type="button" class="btn btn-primary" >Descargar JS</button>
-            <button type="button" class="btn btn-primary" >Descargar PT</button>
+          <button type="button" class="btn btn-primary" onclick="openFile(dispFile)">Abrir</button>
+          <button type="button" class="btn btn-primary">Guardar Entry</button>
+          <button type="button" class="btn btn-primary">Descargar JS</button>
+          <button type="button" class="btn btn-primary">Descargar PT</button>
         </div>
         <div>
-            <textarea id="textarea" style="width:520px; height:600px">
+          <form method="POST" action="http://localhost:3000/traduccion/recibir" id="archivoTexto" style="position:relative;width:520px; height:700px">
+            <div style="position:relative; margin-top: 20px;">
+              <button id="txSubmit" type="submit" class="btn btn-warning" style="position:relative">Traducir</button>
+            </div>
+            <textarea name="archivo" id="textarea" style="width:520px; height:600px; position:relative">
             </textarea><br>
-            <!--  
+            
+              
+            
+          </form>
+
+          <!--  
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
                   <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
@@ -48,143 +60,105 @@
               
                 -->
         </div>
-        
-        
-    </div>
-    <div class="column2">
+
+
+      </div>
+      <div class="column2">
         <h1>Consolas</h1>
 
         <div>
-            <button type="button" class="btn btn-warning">Traducir</button>
+          <button type="submit" class="btn btn-warning" onclick="traducir()" >Traducir</button>
         </div>
         <div class="consolaJS">
-            <h4>Consola JavaScript</h4>
-            <textarea id="conJS" style="width:500px; height:250px">
+          <h4>Consola JavaScript</h4>
+          <textarea id="conJS" style="width:500px; height:250px">
             </textarea>
         </div>
         <div class="consolaPT">
-            <h4>Consola Python</h4>
-            <textarea id="conPT" style="width:500px; height:250px">
+          <h4>Consola Python</h4>
+          <textarea id="conPT" style="width:500px; height:250px">
             </textarea>
         </div>
-        
+
+      </div>
     </div>
-</div>
-</div>
+  </div>
 
-<script>
+  <script>
 
-function hola(){
-    console.log("holamundo")
-}
-function dispFile(contents) {
-  document.getElementById('textarea').innerHTML=contents
-}
-function clickElem(elem) {
-	// Thx user1601638 on Stack Overflow (6/6/2018 - https://stackoverflow.com/questions/13405129/javascript-create-and-save-file )
-	var eventMouse = document.createEvent("MouseEvents")
-	eventMouse.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
-	elem.dispatchEvent(eventMouse)
-}
-function openFile(func) {
-	readFile = function(e) {
-		var file = e.target.files[0];
-		if (!file) {
-			return;
-		}
-		var reader = new FileReader();
-		reader.onload = function(e) {
-			var contents = e.target.result;
-			fileInput.func(contents)
-			document.body.removeChild(fileInput)
-		}
-		reader.readAsText(file)
-	}
-	fileInput = document.createElement("input")
-	fileInput.type='file'
-	fileInput.style.display='none'
-	fileInput.onchange=readFile
-	fileInput.func=func
-	document.body.appendChild(fileInput)
-	clickElem(fileInput)
-} 
+    function guardar() {
+
+      var texto;
+      texto = document.getElementById("textarea").value;
+      mydoc = document.open();
+      mydoc.write(texto);
+      mydoc.execCommand("saveAs", true, "TicketID.txt");
+      mydoc.close();
+
+    }
+    const url= "http://localhost:8080"
+    var inputForm = document.getElementById("textarea")
+    inputForm.addEventListener("submit", (e)=>{
+      e.preventDefault()
+      const formdata= new FormData(inputForm)
+      fetch(url,{
+        method:"POST",
+        body: formdata,
+      }).catch(
+        error => console.error(error)
+      )
+
+    })
+
+    function traducir() {
+      var texto;
+      texto = document.getElementById("textarea").value;
+      console.log(texto)
+
+      var data = {
+        Title: "ArchivoJava",
+        Text: texto
+      };
+      
+    }
+    function dispFile(contents) {
+      document.getElementById('textarea').innerHTML = contents
+    }
+    function clickElem(elem) {
+      // Thx user1601638 on Stack Overflow (6/6/2018 - https://stackoverflow.com/questions/13405129/javascript-create-and-save-file )
+      var eventMouse = document.createEvent("MouseEvents")
+      eventMouse.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+      elem.dispatchEvent(eventMouse)
+    }
+    function openFile(func) {
+      readFile = function (e) {
+        var file = e.target.files[0];
+        if (!file) {
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var contents = e.target.result;
+          fileInput.func(contents)
+          document.body.removeChild(fileInput)
+        }
+        reader.readAsText(file)
+      }
+      fileInput = document.createElement("input")
+      fileInput.type = 'file'
+      fileInput.style.display = 'none'
+      fileInput.onchange = readFile
+      fileInput.func = func
+      document.body.appendChild(fileInput)
+      clickElem(fileInput)
+    }
 
 
-function inject(options, callback) {
-    var load = function(path, callback) {
-        var head = document.getElementsByTagName('head')[0];
-        var s = document.createElement('script');
-
-        s.src = options.baseUrl + "/" + path;
-        head.appendChild(s);
-
-        s.onload = s.onreadystatechange = function(_, isAbort) {
-            if (isAbort || !s.readyState || s.readyState == "loaded" || s.readyState == "complete") {
-                s = s.onload = s.onreadystatechange = null;
-                if (!isAbort)
-                    callback();
-            }
-        };
-    };
-    var pending = [];
-    var transform = function(el) { pending.push(el) };
+ 
    
-    if (options.target)
-        return transform(options.target);
-    window.addEventListener("click", function(e) {
-        if (e.detail == 3 && e.target.localName == "textarea")
-            transform(e.target);
-    });
-}
 
-// Call the inject function to load the ace files.
-var textAce;
-inject({
-    baseUrl: "../../src-noconflict",
-    target: document.querySelector("textarea")
-}, function () {
-    // Transform the textarea on the page into an ace editor.
-    textAce = document.querySelector("textarea").ace;
-    textAce.setDisplaySettings(true);
-    buildBookmarklet();
-});
-
-
-function buildBookmarklet() {
-    var injectSrc = inject.toString().split("\n").join("");
-    injectSrc = injectSrc.replace(/\s+/g, " ");
-    Function("", injectSrc); // check if injectSrc is still valid js
-    
-    var options = textAce.getOptions();
-    options.baseUrl = document.getElementById("srcURL").value;
-
-    var els = document.querySelectorAll(".bookmarkletLink");
-    for (var i = 0; i < els.length; i++)
-        els[i].href = "javascript:(" + injectSrc + ")(" + JSON.stringify(options) + ")";
-};
-
-const tabs = Array.prototype.slice.apply(document.querySelectorAll('.tab-item'));
-const tabContainer = document.getElementById('tabs');
-const tabHighlighter = document.getElementById('highlighter');
-const tabsWidth = tabContainer.offsetWidth;
-
-document.documentElement.style.setProperty('--num-tabs', tabs.length);
-
-tabContainer.addEventListener('click', e => {
-  if (e.target.classList.contains('tab-item')) {
-      let item = tabs.indexOf(e.target);
-      tabs.map(tab => tab.classList.remove('active'));
-      tabs[item].classList.add('active');
-
-      tabHighlighter.style.transform = `translateX(${(tabsWidth / tabs.length) * item }px)`;
-  }
-});
-
-$(function () {
-    $('#myTab li:last-child a').tab('show')
-  })
-
-</script>
+  </script>
 
 </body>
+
 </html>
