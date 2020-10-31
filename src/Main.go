@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -11,13 +14,37 @@ import (
 func index(w http.ResponseWriter, r *http.Request) {
 	http.FileServer(http.Dir("public"))
 }
-func texto(w http.ResponseWriter, r *http.Request) {
 
-	r.ParseForm()
-	archivo := r.PostForm.Get("archivo")
-	log.Println(archivo)
-	envioaJS(archivo)
-	http.Redirect(w, r, "/", 302)
+type Codigo struct {
+	Nombre string
+}
+
+func texto(w http.ResponseWriter, r *http.Request) {
+	var url = "http://localhost:3000/traduccion/recibir"
+	var decoder = json.NewDecoder(r.Body)
+	var c Codigo
+	err := decoder.Decode(&c)
+	log.Println(c.Nombre)
+	if err != nil {
+		panic(err)
+	}
+
+	var jsonStr = []byte(`{"Nombre":"` + c.Nombre + `"}`)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+
+	fmt.Println(string(bodyBytes))
+	fmt.Fprintf(w, string(bodyBytes))
+	log.Println(decoder)
 }
 func envioaJS(envio string) {
 
@@ -30,7 +57,7 @@ func main() {
 	r := mux.NewRouter()
 
 	//r.HandleFunc("/", index).Methods("GET")
-	r.HandleFunc("/prueba", texto).Methods("POST")
+	r.HandleFunc("/texto", texto)
 
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("public"))))
 	log.Println("Escuchando en puerto8080...")

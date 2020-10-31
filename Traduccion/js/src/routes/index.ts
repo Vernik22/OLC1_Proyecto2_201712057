@@ -1,4 +1,5 @@
 import { Router} from 'express';
+import * as manejo from './manejoText';
 
 const router:Router = Router();
 
@@ -11,10 +12,5 @@ router.post('/b', (req,res)=>{
     res.send('Vernik GOD')
 })
 
-router.post('/recibir',function (req, res) {
- 
-    var edad = req.body.archivo;
-    console.log(edad);
- 
-});
+router.post('/recibir',manejo.Tsplit);
 export default router;
