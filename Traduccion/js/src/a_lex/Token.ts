@@ -19,6 +19,7 @@ export enum TypeToken{
     AND ,
     POTENCIA,
     OR ,
+    XOR,
     COMILLASIMPLE,
     TILDE,
     GUIONBAJO,
@@ -79,6 +80,7 @@ export enum TypeToken{
     OUT,
     PRINT,
     PRINTLN,
+    PACKAGE,
     //-----------------------Expresiones 
     ID,
     NUMERO,

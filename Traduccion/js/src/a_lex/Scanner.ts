@@ -94,6 +94,8 @@ export class Scanner {
                 this.lista_Tokens.push(new Token(TypeToken.GUIONBAJO, '_'));
             } else if (c == ',') {
                 this.lista_Tokens.push(new Token(TypeToken.COMA, ','));
+            }else if (c == '^') {
+                this.lista_Tokens.push(new Token(TypeToken.XOR, '^'));
             }
             //---estado A a estado G (Numeros)
             else if (this.isNumber(c)) {
@@ -536,6 +538,9 @@ export class Scanner {
             return true;
         } else if (palabra.toLocaleLowerCase() == "println") {
             this.lista_Tokens.push(new Token(TypeToken.PRINTLN, 'println'));
+            return true;
+        }else if (palabra.toLocaleLowerCase() == "package") {
+            this.lista_Tokens.push(new Token(TypeToken.PACKAGE, 'package'));
             return true;
         }
         else {

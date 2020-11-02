@@ -1,0 +1,171 @@
+ GRAMATICA
+        
+ <INICIO>:=<class><nombre><MAIN>
+
+<MAIN>:=<static><TIPO><nombre><parentesis(><TIPO><corchete[><corchete]><nombre><parentesis)><CUERPO>
+
+<TIPO>:=<void>
+	|<string>
+	|<int>
+	|<char>
+	|<bool>
+	|<float>
+
+<CUERPO>:=<SIF><CUERPO>
+	|<SFOR><CUERPO>
+	|<SSWITCH><CUERPO>
+	|<SWHILE><CUERPO>
+	|<DECLARACION><CUERPO>
+	|<ASIGNACION><CUERPO>
+	|<IMPRIMIR><CUERPO>
+	|<epsilon>
+
+<SIF>:=<IF><CONDICION><CUERPO><ELSE>
+<IF>:=<if>
+<ELSE>:=<else><CUERPO>
+	|<epsilon>
+
+<SFOR>:=<FOR><CONDICION><CUERPO>
+	CONDICIONFOR<CONDICION><declaración o asignación ; expresion ; Incremento o decremento><CUERPO>
+<FOR>:=<for>
+
+<SSWITCH>:=<SWITCH><SELECCION><CUERPOSWITCH>
+<SWITCH>:=<switch>
+<SELECCION>:=<parentesis><seleccion><parentesis>
+<CUERPOSWITCH>:=<caso#><INSTRUCCIONES><break><CASO>
+<CASO>:=<caso#><INSTRUCCIONES><break><CASO>
+        |<default><INSTRUCCIONES><break>
+       |<epsilon>
+<INSTRUCCIONES>:=<CUERPO>
+	           |<epsilon>
+
+<SWHILE>:=<WHILE><CONDICION><CUERPO>
+<WHILE>:=<while>
+
+<CONDICION>:=
+
+<DECLARACION>:=<TIPO><ASIGNACION><DECLARACIONP>
+<DECLARACIONP>:=<puntoycoma>
+		|<coma><ASIGNACION><DECLARACIONP>
+
+<ASIGNACION>:=<nombre><ASIGNACION>
+            |<=><ASIGNACIONP>
+            |<punto y coma>
+<ASIGNACIONP>:=<>
+            E-> T EP
+            EP-> + T EP
+            | - T EP
+            | EPSILON
+            T->F TP
+            TP-> * F TP
+            | / F TP
+            | EPSILON
+            F->  (E)
+            | NUMERO
+<IMPRIMIR>:=
+
+
+--------------************************------------------------------------------------------------------------------
+GRAMATICA
+<INICIO>:= <ARCHIVOBIGIN>
+
+<ARCHIVOBIGIN>:=<IMPORTBIGIN>
+		|<BIGINCOI>
+		|epsilon
+	
+<IMPORTBIGIN>:=<package><PACKAGEBODY><puntoycoma>
+		|<import><PACKAGEBODY><puntoycoma>
+		|<epsiolon>
+
+<BIGINCOI>:=<public><CI2>
+
+<CI2>:=<CLASSBIGIN>
+	|<INTERFACEBIGIN>
+	|<epsilon>
+
+<CLASSBIGIN>:=<class><nombre><llaveiz><METODOS><llaveder>
+
+<INTERFACEBIGIN>:=<interface><nombre><llaveiz><CUERPOINT><llaveder>
+	
+<MAIN>:=<public><static><void><main><parentesis(><TIPO><corchete[><corchete]><nombre><parentesis)><CUERPO>
+
+<IMPRIMIR>:=<system><punto><out><punto><PRINTTYPE><parentesisiz><IMPCUE><parentesisder><puntoycoma>
+
+<PRINTTYPE>:=<println>
+		|<print>
+
+<IMPCUE>:=<comillas><cadena><comillas><IMPCUE>
+		|<id><IMPCUE>
+		|<SIGNO><IMPCUE>
+		|<numero><IMPCUE>
+		|<epsilon>
+
+<METODOS>:=<MODIFICADOR><TIPO><nombre><parentesisiz><PARAMETROS><parentesisder><llaveiz><CUERPO><llaveder><METODOS>
+		|<epsilon>
+
+<PARAMETROS>:=<TIPO><id><PARAMETROS>
+		|<epsilon>
+
+<CUERPO>:=<SIF><CUERPO>
+	|<SFOR><CUERPO>
+	|<SWHILE><CUERPO>
+	|<SDOWHILE><CUERPO>
+	|<DECLARACION><CUERPO>
+	|<ASIGNACION><CUERPO>
+	|<IMPRIMIR><CUERPO>
+	|<epsilon>
+
+<SFOR>:=<for><parentesisiz><DECLARACION><puntoycoma><EXP><puntoycoma><EXP><parentesisder><llaveiz><CUERPO><llaveder>
+
+<SWHILE>:=<while><parentesisiz><EXP><parentesisder><llaveiz><CUERPO><llaveder>
+
+<SDOHILE>:=<do><llaveiz><CUERPO><llaveder><while><parentesisiz><EXP><parentesisder><puntoycoma>
+
+<SIF>:=<if><parentesisiz><EXP><parentesisder><llaveiz><CUERPO><llaveder><ELSE>
+<ELSE>:=<else><ELSE2>
+	|<epsilon>
+<ELSE2>:=<SIF>
+		|<llaveiz><CUERPO><llaveder>
+		|<epsilon>
+
+
+
+<EXP>:=<E><and><and><E>
+	|<E><or><or><E>
+	|<admiracion><admiracion><E>
+	|<E><xor><E>
+	|<E><mayorque><E>
+	|<E><menorque><E>
+	|<E><mayorque><asignacion><E>
+	|<E><menorque><asignacion><E>
+	|<E><asignacion><asignacion><E>
+	|<E><admiracion><asignacion><E>
+
+E-> T EP
+EP-> + T EP
+    | - T EP
+    | EPSILON
+T->F TP
+TP-> * F TP
+    | / F TP
+    | EPSILON
+F->  (E)
+	| NUMERO
+	|negativo(-) F	
+
+<BREAK>:=
+<CONTINUE>:=
+<RETURN>:=
+
+<TIPO>:=<void>
+	|<string>
+	|<int>
+	|<char>
+	|<bool>
+	|<float>
+	|<double>
+
+<MODIFICADOR>:=<public>
+		|<private>
+		|<protected>
+		|<epsilon>
