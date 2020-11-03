@@ -1,38 +1,38 @@
-import {Token} from "../../a_lex/Token"
-import {TypeToken} from "../../a_lex/Token"
+import { Token } from "../../a_lex/Token"
+import { TypeToken } from "../../a_lex/Token"
 import { Tsplit } from "../../routes/manejoText";
 
-export class Parser{
-    
-    listaTokens:Token[];
-    errorSintatico:String[];
-    preAnalisis:number;
-    pos:number;
+export class Parser {
 
-    constructor(listaTokens:Token[]){
-        this.preAnalisis =-1;
-        this.listaTokens=listaTokens;
-        this.errorSintatico=[];
-        this.pos=0;
+    listaTokens: Token[];
+    errorSintatico: String[];
+    preAnalisis: number;
+    pos: number;
+
+    constructor(listaTokens: Token[]) {
+        this.preAnalisis = -1;
+        this.listaTokens = listaTokens;
+        this.errorSintatico = [];
+        this.pos = 0;
     }
 
-    emparejar(terminal:TypeToken){
-        if (this.pos>=this.listaTokens.length) {
+    emparejar(terminal: TypeToken) {
+        if (this.pos >= this.listaTokens.length) {
             return;
         }
-        if (this.preAnalisis==terminal) {
-            console.log("token correcto; "+this.listaTokens[this.pos].token)
+        if (this.preAnalisis == terminal) {
+            console.log("token correcto; " + this.listaTokens[this.pos].token)
             this.pos++;
-            if (this.pos<this.listaTokens.length) {
-                this.preAnalisis=this.listaTokens[this.pos].token;
+            if (this.pos < this.listaTokens.length) {
+                this.preAnalisis = this.listaTokens[this.pos].token;
             }
         } else {
-            console.log("Se encontro error sintactico, no se esperaba: "+ this.preAnalisis.toString()+" val:" + this.listaTokens[this.pos].lexema);
-            this.errorSintatico.push("error sintactico no se esperaba: "+ this.preAnalisis.toString()+" val:" + this.listaTokens[this.pos].lexema);
+            console.log("Se encontro error sintactico, no se esperaba: " + this.preAnalisis.toString() + " val:" + this.listaTokens[this.pos].lexema);
+            this.errorSintatico.push("error sintactico no se esperaba: " + this.preAnalisis.toString() + " val:" + this.listaTokens[this.pos].lexema);
             //RECUPERACION DE ERRORES
             while (this.pos < this.listaTokens.length) {
                 //console.log(this.lista_Tokens[this.pos].token+" == "+TypeToken.T_PYCOMA)    
-                if (this.listaTokens[this.pos].token == TypeToken.PCOMA 
+                if (this.listaTokens[this.pos].token == TypeToken.PCOMA
                     || this.listaTokens[this.pos].token == TypeToken.LLAVEDER) {
                     this.pos++;
                     this.preAnalisis = this.listaTokens[this.pos].token;
@@ -40,57 +40,57 @@ export class Parser{
                 }
                 this.pos++;
             }
-            if(this.preAnalisis == TypeToken.ID){
+            if (this.preAnalisis == TypeToken.ID) {
                 this.METODOS();
             }
         }
     }
     //-----------------GRAMATICA---------------
-    Analizar(){
-        this.preAnalisis=this.listaTokens[0].token;
+    Analizar() {
+        this.preAnalisis = this.listaTokens[0].token;
         this.ARCHIVOBIGIN();
         console.log("Fin del analisis sintactico....!");
     }
 
-    ARCHIVOBIGIN(){
+    ARCHIVOBIGIN() {
         this.IMPORTBIGIN();
         this.BIGINCOI();
     }
 
-    IMPORTBIGIN(){
-        if (this.preAnalisis==TypeToken.PACKAGE) {
+    IMPORTBIGIN() {
+        if (this.preAnalisis == TypeToken.PACKAGE) {
             this.emparejar(TypeToken.PACKAGE);
             this.PACKAGEBODY();
             this.emparejar(TypeToken.PCOMA);
 
-        } else if (this.preAnalisis==TypeToken.IMPORT) {
+        } else if (this.preAnalisis == TypeToken.IMPORT) {
             this.emparejar(TypeToken.IMPORT);
             this.PACKAGEBODY();
             this.emparejar(TypeToken.PCOMA);
         } else {
             //EPSILON
-        }              
+        }
     }
 
-    BIGINCOI(){
-        if (this.preAnalisis==TypeToken.PUBLIC) {
+    BIGINCOI() {
+        if (this.preAnalisis == TypeToken.PUBLIC) {
             this.emparejar(TypeToken.PUBLIC);
             this.CI2();
         }
     }
 
-    CI2(){
-        if (this.preAnalisis==TypeToken.CLASS) {
+    CI2() {
+        if (this.preAnalisis == TypeToken.CLASS) {
             this.CLASSBIGIN();
-        } else if (this.preAnalisis==TypeToken.INTERFACE) {
+        } else if (this.preAnalisis == TypeToken.INTERFACE) {
             this.INTERFACEBIGIN();
         } else {
             //EPSILON
         }
- 
+
     }
 
-    CLASSBIGIN(){
+    CLASSBIGIN() {
         this.emparejar(TypeToken.CLASS);
         this.emparejar(TypeToken.ID);
         this.emparejar(TypeToken.LLAVEIZQ);
@@ -99,7 +99,7 @@ export class Parser{
         this.CI2();
     }
 
-    INTERFACEBIGIN(){
+    INTERFACEBIGIN() {
         this.emparejar(TypeToken.INTERFACE);
         this.emparejar(TypeToken.ID);
         this.emparejar(TypeToken.LLAVEIZQ);
@@ -108,7 +108,7 @@ export class Parser{
         this.CI2();
     }
 
-    MAIN(){
+    MAIN() {
         this.emparejar(TypeToken.PUBLIC);
         this.emparejar(TypeToken.STATIC);
         this.emparejar(TypeToken.VOID);
@@ -124,7 +124,7 @@ export class Parser{
         this.emparejar(TypeToken.LLAVEDER);
     }
 
-    IMPRIMIR(){
+    IMPRIMIR() {
         this.emparejar(TypeToken.SYSTEM);
         this.emparejar(TypeToken.PUNTO);
         this.emparejar(TypeToken.OUT);
@@ -136,40 +136,40 @@ export class Parser{
         this.emparejar(TypeToken.PCOMA);
     }
 
-    PRINTTYPE(){
-        if (this.preAnalisis==TypeToken.PRINTLN) {
+    PRINTTYPE() {
+        if (this.preAnalisis == TypeToken.PRINTLN) {
             this.emparejar(TypeToken.PRINTLN)
-        }else if(this.preAnalisis==TypeToken.PRINT){
+        } else if (this.preAnalisis == TypeToken.PRINT) {
             this.emparejar(TypeToken.PRINT)
         }
     }
 
-    IMPCUE(){
+    IMPCUE() {
         //Probar cadenas vacias
-        if (this.preAnalisis==TypeToken.COMILLAS) {
+        if (this.preAnalisis == TypeToken.COMILLAS) {
             this.emparejar(TypeToken.COMILLAS);
-            if (this.preAnalisis==TypeToken.CADENA) {
+            if (this.preAnalisis == TypeToken.CADENA) {
                 this.emparejar(TypeToken.CADENA);
             }
             this.emparejar(TypeToken.COMILLAS);
             this.IMPCUE();
-        } else if (this.preAnalisis==TypeToken.COMILLASIMPLE) {
-            
-        }else if (this.preAnalisis==TypeToken.ID) {
-            
-        } else if(this.preAnalisis==TypeToken.NUMERO||this.preAnalisis==TypeToken.MAS||this.preAnalisis==TypeToken.GUION){
+        } else if (this.preAnalisis == TypeToken.COMILLASIMPLE) {
+
+        } else if (this.preAnalisis == TypeToken.ID) {
+
+        } else if (this.preAnalisis == TypeToken.NUMERO || this.preAnalisis == TypeToken.MAS || this.preAnalisis == TypeToken.GUION) {
             this.E();
-        }else {
-            
+        } else {
+
             //EPSILON
         }
     }
 
-    METODOS(){
-        if (this.preAnalisis==TypeToken.PUBLIC&&this.preAnalisis+1==TypeToken.STATIC&&this.preAnalisis+2==TypeToken.VOID) {
+    METODOS() {
+        if (this.preAnalisis == TypeToken.PUBLIC && this.preAnalisis + 1 == TypeToken.STATIC && this.preAnalisis + 2 == TypeToken.VOID) {
             this.MAIN();
             this.METODOS();
-        } else if (this.preAnalisis==TypeToken.PUBLIC||this.preAnalisis==TypeToken.PRIVATE||this.preAnalisis==TypeToken.PROTECTED) {
+        } else if (this.preAnalisis == TypeToken.PUBLIC || this.preAnalisis == TypeToken.PRIVATE || this.preAnalisis == TypeToken.PROTECTED) {
             this.MODIFICADOR();
             this.TIPO();
             this.emparejar(TypeToken.ID);
@@ -180,27 +180,55 @@ export class Parser{
             this.CUERPO();
             this.emparejar(TypeToken.LLAVEDER);
             this.METODOS();
-        }else{
+        } else {
             //epsilon
         }
-        
-    }
-
-    CUERPOINT(){
 
     }
-    
-    PARAMETROS(){
-        if (this.preAnalisis==TypeToken.VOID||this.preAnalisis==TypeToken.STRING||this.preAnalisis==TypeToken.INT||this.preAnalisis==TypeToken.CHAR||this.preAnalisis==TypeToken.BOOLEAN||this.preAnalisis==TypeToken.FLOAT||this.preAnalisis==TypeToken.DOUBLE) {
+
+    CUERPOINT() {
+        if (this.preAnalisis == TypeToken.PUBLIC || this.preAnalisis == TypeToken.PRIVATE || this.preAnalisis == TypeToken.PROTECTED) {
+            this.MODIFICADOR();
             this.TIPO();
             this.emparejar(TypeToken.ID);
-            this.PRPR();            
+            this.emparejar(TypeToken.PARENTESISIZQ);
+            this.PARAMETROS();
+            this.emparejar(TypeToken.PARENTESISDER);
+            this.emparejar(TypeToken.PCOMA);
+            this.CUERPOINT();
+        }else if (this.preAnalisis == TypeToken.VOID || this.preAnalisis == TypeToken.STRING || this.preAnalisis == TypeToken.INT || this.preAnalisis == TypeToken.CHAR || this.preAnalisis == TypeToken.BOOLEAN || this.preAnalisis == TypeToken.FLOAT || this.preAnalisis == TypeToken.DOUBLE) {
+            this.TIPO();
+            this.emparejar(TypeToken.ID);
+            this.CUERPOINTP();
+            this.CUERPOINT();
+        }else{
+            //Epsilon
+        }
+    }
+    CUERPOINTP(){
+        if (this.preAnalisis == TypeToken.PARENTESISIZQ) {
+            this.emparejar(TypeToken.PARENTESISIZQ);
+            this.PARAMETROS();
+            this.emparejar(TypeToken.PARENTESISDER);
+            this.emparejar(TypeToken.PCOMA);
+        } else if (this.preAnalisis == TypeToken.ASIGNACION) {
+            this.emparejar(TypeToken.ASIGNACION);
+            this.E();
+            this.emparejar(TypeToken.PCOMA);
+        }
+    }
+
+    PARAMETROS() {
+        if (this.preAnalisis == TypeToken.VOID || this.preAnalisis == TypeToken.STRING || this.preAnalisis == TypeToken.INT || this.preAnalisis == TypeToken.CHAR || this.preAnalisis == TypeToken.BOOLEAN || this.preAnalisis == TypeToken.FLOAT || this.preAnalisis == TypeToken.DOUBLE) {
+            this.TIPO();
+            this.emparejar(TypeToken.ID);
+            this.PRPR();
         } else {
             //epsilon
         }
     }
-    PRPR(){
-        if (this.preAnalisis==TypeToken.COMA) {
+    PRPR() {
+        if (this.preAnalisis == TypeToken.COMA) {
             this.emparejar(TypeToken.COMA);
             this.PARAMETROS();
         } else {
@@ -208,26 +236,26 @@ export class Parser{
         }
     }
 
-    CUERPO(){
-        if (this.preAnalisis==TypeToken.IF) {
+    CUERPO() {
+        if (this.preAnalisis == TypeToken.IF) {
             this.SIF();
             this.CUERPO();
-        } else if (this.preAnalisis==TypeToken.FOR) {
+        } else if (this.preAnalisis == TypeToken.FOR) {
             this.SFOR();
             this.CUERPO();
-        } else if (this.preAnalisis==TypeToken.WHILE) {
+        } else if (this.preAnalisis == TypeToken.WHILE) {
             this.SWHILE();
             this.CUERPO();
-        } else if (this.preAnalisis==TypeToken.DO) {
+        } else if (this.preAnalisis == TypeToken.DO) {
             this.SDOWHILE();
             this.CUERPO();
-        } else if (this.preAnalisis==TypeToken.STRING||this.preAnalisis==TypeToken.INT||this.preAnalisis==TypeToken.CHAR||this.preAnalisis==TypeToken.BOOLEAN||this.preAnalisis==TypeToken.FLOAT||this.preAnalisis==TypeToken.DOUBLE) {
+        } else if (this.preAnalisis == TypeToken.STRING || this.preAnalisis == TypeToken.INT || this.preAnalisis == TypeToken.CHAR || this.preAnalisis == TypeToken.BOOLEAN || this.preAnalisis == TypeToken.FLOAT || this.preAnalisis == TypeToken.DOUBLE) {
             this.DECLARACION();
             this.CUERPO();
-        } else if (this.preAnalisis==TypeToken.SYSTEM&&this.preAnalisis+1==TypeToken.PUNTO&&this.preAnalisis+2==TypeToken.OUT) {
+        } else if (this.preAnalisis == TypeToken.SYSTEM && this.preAnalisis + 1 == TypeToken.PUNTO && this.preAnalisis + 2 == TypeToken.OUT) {
             this.IMPRIMIR();
             this.CUERPO();
-        } else if (this.preAnalisis==TypeToken.ID) {
+        } else if (this.preAnalisis == TypeToken.ID) {
             this.ASIGNACION();
             this.DECLARACION();
             this.CUERPO();
@@ -237,7 +265,7 @@ export class Parser{
     }
 
     //revisar el punto y coma despues de la declaracion
-    SFOR(){
+    SFOR() {
         this.emparejar(TypeToken.FOR);
         this.emparejar(TypeToken.PARENTESISIZQ);
         this.DECLARACION();
@@ -251,7 +279,7 @@ export class Parser{
         this.emparejar(TypeToken.LLAVEDER);
     }
 
-    SWHILE(){
+    SWHILE() {
         this.emparejar(TypeToken.WHILE);
         this.emparejar(TypeToken.PARENTESISIZQ);
         this.EXP();
@@ -261,7 +289,7 @@ export class Parser{
         this.emparejar(TypeToken.LLAVEDER);
     }
 
-    SDOWHILE(){
+    SDOWHILE() {
         this.emparejar(TypeToken.DO);
         this.emparejar(TypeToken.LLAVEIZQ);
         this.CUERPO();
@@ -273,7 +301,7 @@ export class Parser{
         this.emparejar(TypeToken.PCOMA);
     }
 
-    SIF(){
+    SIF() {
         this.emparejar(TypeToken.IF);
         this.emparejar(TypeToken.PARENTESISIZQ);
         this.EXP();
@@ -284,8 +312,8 @@ export class Parser{
         this.ELSE();
     }
 
-    ELSE(){
-        if (this.preAnalisis==TypeToken.ELSE) {
+    ELSE() {
+        if (this.preAnalisis == TypeToken.ELSE) {
             this.emparejar(TypeToken.ELSE);
             this.ELSE2();
         } else {
@@ -293,10 +321,10 @@ export class Parser{
         }
     }
 
-    ELSE2(){
-        if (this.preAnalisis==TypeToken.IF) {
+    ELSE2() {
+        if (this.preAnalisis == TypeToken.IF) {
             this.SIF();
-        } else if (this.preAnalisis==TypeToken.LLAVEIZQ) {
+        } else if (this.preAnalisis == TypeToken.LLAVEIZQ) {
             this.emparejar(TypeToken.LLAVEIZQ);
             this.CUERPO();
             this.emparejar(TypeToken.LLAVEDER);
@@ -305,75 +333,75 @@ export class Parser{
         }
     }
 
-    EXP(){
-        if (this.preAnalisis==TypeToken.ADMIRACION) {
+    EXP() {
+        if (this.preAnalisis == TypeToken.ADMIRACION) {
             this.emparejar(TypeToken.ADMIRACION);
             this.E();
             this.EXPP();
-        } else  {
-            this.E();    
-            this.EXPP();   
+        } else {
+            this.E();
+            this.EXPP();
         }
     }
 
-    EXPP(){
-        if (this.preAnalisis==TypeToken.AND) {
+    EXPP() {
+        if (this.preAnalisis == TypeToken.AND) {
             this.emparejar(TypeToken.AND);
             this.emparejar(TypeToken.AND);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis==TypeToken.OR) {
+        } else if (this.preAnalisis == TypeToken.OR) {
             this.emparejar(TypeToken.OR);
             this.emparejar(TypeToken.OR);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis==TypeToken.XOR) {
+        } else if (this.preAnalisis == TypeToken.XOR) {
             this.emparejar(TypeToken.XOR);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis==TypeToken.MAYORQ&&this.preAnalisis+1==TypeToken.ASIGNACION) {
+        } else if (this.preAnalisis == TypeToken.MAYORQ && this.preAnalisis + 1 == TypeToken.ASIGNACION) {
             this.emparejar(TypeToken.MAYORQ);
             this.emparejar(TypeToken.ASIGNACION);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis==TypeToken.MENORQ&&this.preAnalisis+1==TypeToken.ASIGNACION) {
+        } else if (this.preAnalisis == TypeToken.MENORQ && this.preAnalisis + 1 == TypeToken.ASIGNACION) {
             this.emparejar(TypeToken.MENORQ);
             this.emparejar(TypeToken.ASIGNACION);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis==TypeToken.MAYORQ) {
+        } else if (this.preAnalisis == TypeToken.MAYORQ) {
             this.emparejar(TypeToken.MAYORQ);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis==TypeToken.MENORQ) {
+        } else if (this.preAnalisis == TypeToken.MENORQ) {
             this.emparejar(TypeToken.MENORQ);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis==TypeToken.ASIGNACION) {
+        } else if (this.preAnalisis == TypeToken.ASIGNACION) {
             this.emparejar(TypeToken.ASIGNACION);
             this.emparejar(TypeToken.ASIGNACION);
             this.E();
             this.EXP();
-            
-        } else if (this.preAnalisis==TypeToken.ADMIRACION) {
+
+        } else if (this.preAnalisis == TypeToken.ADMIRACION) {
             this.emparejar(TypeToken.ADMIRACION);
             this.emparejar(TypeToken.ASIGNACION);
             this.E();
             this.EXP();
-        } 
+        }
     }
 
-    E(){
+    E() {
         this.T();
         this.EP();
     }
 
-    EP(){
-        if (this.preAnalisis==TypeToken.MAS) {
+    EP() {
+        if (this.preAnalisis == TypeToken.MAS) {
             this.emparejar(TypeToken.MAS);
             this.T();
             this.EP();
-        } else if (this.preAnalisis==TypeToken.GUION) {
+        } else if (this.preAnalisis == TypeToken.GUION) {
             this.emparejar(TypeToken.GUION);
             this.T();
             this.EP();
@@ -382,17 +410,17 @@ export class Parser{
         }
     }
 
-    T(){
+    T() {
         this.F();
         this.TP();
     }
 
-    TP(){
-        if (this.preAnalisis==TypeToken.ASTERISCO) {
+    TP() {
+        if (this.preAnalisis == TypeToken.ASTERISCO) {
             this.emparejar(TypeToken.ASTERISCO);
             this.F();
             this.TP();
-        } else if (this.preAnalisis==TypeToken.DIAGONAL) {
+        } else if (this.preAnalisis == TypeToken.DIAGONAL) {
             this.emparejar(TypeToken.DIAGONAL);
             this.F();
             this.TP();
@@ -402,82 +430,82 @@ export class Parser{
         }
     }
 
-    F(){
-        if (this.preAnalisis==TypeToken.PARENTESISIZQ) {
-            
-        } else if (this.preAnalisis==TypeToken.NUMERO) {
-            
-        } else if (this.preAnalisis==TypeToken.GUION) {
-            
+    F() {
+        if (this.preAnalisis == TypeToken.PARENTESISIZQ) {
+
+        } else if (this.preAnalisis == TypeToken.NUMERO) {
+
+        } else if (this.preAnalisis == TypeToken.GUION) {
+
         } else {
             //nada
         }
-           
+
     }
 
-    TIPO(){
-        if (this.preAnalisis==TypeToken.VOID) {
+    TIPO() {
+        if (this.preAnalisis == TypeToken.VOID) {
             this.emparejar(TypeToken.VOID);
-            
-        } else if (this.preAnalisis==TypeToken.STRING) {
+
+        } else if (this.preAnalisis == TypeToken.STRING) {
             this.emparejar(TypeToken.STRING);
-            
-        } else if (this.preAnalisis==TypeToken.INT) {
+
+        } else if (this.preAnalisis == TypeToken.INT) {
             this.emparejar(TypeToken.INT);
-            
-        } else if (this.preAnalisis==TypeToken.CHAR) {
+
+        } else if (this.preAnalisis == TypeToken.CHAR) {
             this.emparejar(TypeToken.CHAR);
-            
-        } else if (this.preAnalisis==TypeToken.BOOLEAN) {
+
+        } else if (this.preAnalisis == TypeToken.BOOLEAN) {
             this.emparejar(TypeToken.BOOLEAN);
-            
-        } else if (this.preAnalisis==TypeToken.FLOAT) {
+
+        } else if (this.preAnalisis == TypeToken.FLOAT) {
             this.emparejar(TypeToken.FLOAT);
-           
-        } else if (this.preAnalisis==TypeToken.DOUBLE) {
+
+        } else if (this.preAnalisis == TypeToken.DOUBLE) {
             this.emparejar(TypeToken.DOUBLE);
-            
-        } 
+
+        }
     }
 
-    MODIFICADOR(){
-        if (this.preAnalisis==TypeToken.PUBLIC) {
+    MODIFICADOR() {
+        if (this.preAnalisis == TypeToken.PUBLIC) {
             this.emparejar(TypeToken.PUBLIC);
-            
-        } else if (this.preAnalisis==TypeToken.PRIVATE) {
+
+        } else if (this.preAnalisis == TypeToken.PRIVATE) {
             this.emparejar(TypeToken.PRIVATE);
-            
-        } else if (this.preAnalisis==TypeToken.PROTECTED) {
+
+        } else if (this.preAnalisis == TypeToken.PROTECTED) {
             this.emparejar(TypeToken.PROTECTED);
-            
-        } else{
+
+        } else {
             //EPSILON
         }
     }
 
-    PACKAGEBODY(){
+    PACKAGEBODY() {
         this.emparejar(TypeToken.ID);
         this.PP();
         this.emparejar(TypeToken.PCOMA);
     }
-    PP(){
-        if (this.preAnalisis==TypeToken.PUNTO) {
+    PP() {
+        if (this.preAnalisis == TypeToken.PUNTO) {
             this.emparejar(TypeToken.PUNTO);
             this.PP();
-        } else if (this.preAnalisis==TypeToken.ASTERISCO) {
+        } else if (this.preAnalisis == TypeToken.ASTERISCO) {
             this.emparejar(TypeToken.ASTERISCO);
             this.PP();
-        } else if (this.preAnalisis==TypeToken.ID) {
+        } else if (this.preAnalisis == TypeToken.ID) {
             this.emparejar(TypeToken.ID);
             this.PP();
-        } else{
+        } else {
             //EPSILON
         }
     }
 
-    DECLARACION(){
+    DECLARACION() {
         this.TIPO();
-        if (this.preAnalisis==TypeToken.CORCHETEIZQ) {
+        if (this.preAnalisis == TypeToken.CORCHETEIZQ) {
             this.emparejar(TypeToken.CORCHETEIZQ);
             this.emparejar(TypeToken.CORCHETEDER);
         }
@@ -485,29 +513,29 @@ export class Parser{
         this.DECLARACIONP();
     }
 
-    DECLARACIONP(){
-        if (this.preAnalisis==TypeToken.PCOMA) {
+    DECLARACIONP() {
+        if (this.preAnalisis == TypeToken.PCOMA) {
             this.emparejar(TypeToken.PCOMA);
-        } else if (this.preAnalisis==TypeToken.COMA) {
+        } else if (this.preAnalisis == TypeToken.COMA) {
             this.emparejar(TypeToken.COMA);
             this.ASIGNACION();
             this.DECLARACIONP();
-        } else{
+        } else {
             //EPSILON
         }
     }
 
-    ASIGNACION(){
-        if (this.preAnalisis==TypeToken.ID) {
+    ASIGNACION() {
+        if (this.preAnalisis == TypeToken.ID) {
             this.emparejar(TypeToken.ID);
             this.ASIGNACION();
-        } else if (this.preAnalisis==TypeToken.ASIGNACION) {
+        } else if (this.preAnalisis == TypeToken.ASIGNACION) {
             this.emparejar(TypeToken.ASIGNACION);
-            if (this.preAnalisis==TypeToken.NEW) {
+            if (this.preAnalisis == TypeToken.NEW) {
                 this.emparejar(TypeToken.NEW);
             }
             this.E();
-        } else{
+        } else {
             //EPSILON
         }
     }

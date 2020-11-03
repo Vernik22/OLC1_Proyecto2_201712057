@@ -110,6 +110,13 @@ GRAMATICA
 		|<MAIN><METODOS>
 		|<epsilon>
 
+<CUERPOINT>:=<MODIFICADOR><TIPO><id><parentesisiz><PARAMETROS><parentesisder><puntoycoma><CUERPOINT>
+			|<TIPO><id><CUERPOINTP><CUERPOINT>
+			|<epsilon>
+
+<CUERPOINTP>:=<parentesisiz><PARAMETROS><parentesisder><puntoycoma>
+			|<asignacion><E><puntoycoma>
+
 <PARAMETROS>:=<TIPO><id><PRPR>
 			|epsilon
 
