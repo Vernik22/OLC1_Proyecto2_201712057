@@ -77,6 +77,12 @@ GRAMATICA
 		|<import><PACKAGEBODY><puntoycoma>
 		|<epsiolon>
 
+<PACKAGEBODY>:=<id><PP><puntoycoma>
+<PP>:=<punto><PP>
+	|<asterisco><PP>
+	|<id><PP>
+	|<epsilon>
+
 <BIGINCOI>:=<public><CI2>
 
 <CI2>:=<CLASSBIGIN>
@@ -95,16 +101,20 @@ GRAMATICA
 		|<print>
 
 <IMPCUE>:=<comillas><cadena><comillas><IMPCUE>
+		|<comillasimple><cadena><comillasimple><IMPCUE>
 		|<id><IMPCUE>
-		|<SIGNO><IMPCUE>
-		|<numero><IMPCUE>
+		|<E><IMPCUE>
 		|<epsilon>
 
 <METODOS>:=<MODIFICADOR><TIPO><nombre><parentesisiz><PARAMETROS><parentesisder><llaveiz><CUERPO><llaveder><METODOS>
+		|<MAIN><METODOS>
 		|<epsilon>
 
-<PARAMETROS>:=<TIPO><id><PARAMETROS>
-		|<epsilon>
+<PARAMETROS>:=<TIPO><id><PRPR>
+			|epsilon
+
+<PRPR>:=<coma><PARAMETROS>
+		|epsilon
 
 <CUERPO>:=<SIF><CUERPO>
 	|<SFOR><CUERPO>
@@ -114,6 +124,14 @@ GRAMATICA
 	|<ASIGNACION><CUERPO>
 	|<IMPRIMIR><CUERPO>
 	|<epsilon>
+
+<DECLARACION>:=<TIPO><ASIGNACION><DECLARACIONP>
+<DECLARACIONP>:=<puntoycoma>
+		|<coma><ASIGNACION><DECLARACIONP>
+
+<ASIGNACION>:=<nombre><ASIGNACION>
+            |<=><ASIGNACIONP>
+            |<punto y coma>
 
 <SFOR>:=<for><parentesisiz><DECLARACION><puntoycoma><EXP><puntoycoma><EXP><parentesisder><llaveiz><CUERPO><llaveder>
 
@@ -129,17 +147,18 @@ GRAMATICA
 		|<epsilon>
 
 
+<EXP>:=<admiracion><E><EXPP>
+		|<E><EXPP>
 
-<EXP>:=<E><and><and><E>
-	|<E><or><or><E>
-	|<admiracion><admiracion><E>
-	|<E><xor><E>
-	|<E><mayorque><E>
-	|<E><menorque><E>
-	|<E><mayorque><asignacion><E>
-	|<E><menorque><asignacion><E>
-	|<E><asignacion><asignacion><E>
-	|<E><admiracion><asignacion><E>
+<EXPP>:=<and><and><E>
+	|<or><or><E>
+	|<xor><E>
+	|<mayorque><asignacion><E>
+	|<menorque><asignacion><E>
+	|<mayorque><E>
+	|<menorque><E>
+	|<asignacion><asignacion><E>
+	|<admiracion><asignacion><E>
 
 E-> T EP
 EP-> + T EP
@@ -169,3 +188,16 @@ F->  (E)
 		|<private>
 		|<protected>
 		|<epsilon>
+
+
+<EXP>:=<E><and><and><E>
+	|<E><or><or><E>
+	|<admiracion><admiracion><E>
+	|<E><xor><E>
+	|<E><mayorque><E>
+	|<E><menorque><E>
+	|<E><mayorque><asignacion><E>
+	|<E><menorque><asignacion><E>
+	|<E><asignacion><asignacion><E>
+	|<E><admiracion><asignacion><E>
+
