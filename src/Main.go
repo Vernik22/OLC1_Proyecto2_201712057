@@ -18,6 +18,11 @@ func index(w http.ResponseWriter, r *http.Request) {
 type Codigo struct {
 	Nombre string
 }
+type People struct {
+	Name    string `json:"name"`
+	Age     int64  `json:"age"`
+	IsAlive bool   `json:"isAlive"`
+}
 
 func texto(w http.ResponseWriter, r *http.Request) {
 	var url = "http://localhost:3000/traduccion/recibir"
@@ -46,9 +51,42 @@ func texto(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(bodyBytes))
 	log.Println(decoder)
 }
-func envioaJS(envio string) {
+func envioaPY(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf(r.FormValue("textarea0"))
+	r.ParseForm()
+	var texto = r.PostForm.Get("textarea0")
+	log.Println(texto)
 
-	log.Println(envio)
+	var url = "http://localhost:3000/traduccion/recibir"
+
+	requestBody, err := json.Marshal(map[string]string{
+		"Nombre": texto,
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(requestBody))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(string(body))
+
+	/*
+		client := &http.Client{}
+		r, _ := http.NewRequest(http.MethodPost, url, strings.NewReader(data.Encode())) // URL-encoded payload
+		r.Header.Add("Authorization", "auth_token=\"XXXXXXX\"")
+		r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		r.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
+
+		resp, _ := client.Do(r)
+		fmt.Println(resp.Status)
+	*/
 }
 
 func main() {
@@ -57,7 +95,7 @@ func main() {
 	r := mux.NewRouter()
 
 	//r.HandleFunc("/", index).Methods("GET")
-	r.HandleFunc("/texto", texto)
+	r.HandleFunc("/texto", envioaPY).Methods("POST")
 
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("public"))))
 	log.Println("Escuchando en puerto8080...")

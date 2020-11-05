@@ -1,53 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="css/index.css"/>
-        <script type="text/javascript" src="./js/index.js"></script>
-        <script type="text/javascript" src="./jquery-1.7.2.min.js"></script>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-        <script src="./codemirror/lib/codemirror.js"></script>
-        <link rel="stylesheet" href="./codemirror//lib//codemirror.css">
-        <link rel="stylesheet" href="./codemirror//theme//eclipse.css">
-        <script src="./codemirror/mode/clike/clike.js"></script>
-        <link rel="shortcut icon" href="img/icon.ico" />
-        <title>[OLC1]Proyecto2</title>
-    </head>
-    <body>
-        <div class="contenedor">
-            <input id="fileInput" title="Abrir" type="file" size="50" onchange="AbrirArchivo(this.files)" class="btn btn-primary">
-            <button onclick="DescargarArchivo();" id="guardar" title="Guardar" class="btn btn-secondary">Guardar</button>
-            <button onclick="agregar();" title="AgregarPestana" id="btn4" class="btn btn-secondary">Agregar Pestana</button>
-            <button onclick="quitar();" title="QuitarPestana" id="btn5" class="btn btn-secondary">Quitar Pestana</button>
-            <button onclick="traducir();" title="Traducir" class="btn btn-light">Traducir</button>
-            
-            <div id="pestanas">
-                <ul id=lista>
-                </ul>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script type="text/javascript" src="./js/index.js"></script>
+    <script type="text/javascript" src="./jquery-1.7.2.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="./codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="./codemirror//lib//codemirror.css">
+    <link rel="stylesheet" href="./codemirror//theme//eclipse.css">
+    <script src="./codemirror/mode/clike/clike.js"></script>
+    <link rel="shortcut icon" href="img/icon.ico" />
+    <title>[OLC1]Proyecto2</title>
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <input id="fileInput" title="Abrir" type="file" size="50" onchange="AbrirArchivo(this.files)"
+            class="btn btn-primary">
+        <button onclick="DescargarArchivo();" id="guardar" title="Guardar" class="btn btn-secondary">Guardar</button>
+        <button onclick="agregar();" title="AgregarPestana" id="btn4" class="btn btn-secondary">Agregar Pestana</button>
+        <button onclick="quitar();" title="QuitarPestana" id="btn5" class="btn btn-secondary">Quitar Pestana</button>
+        <button onclick="traducir();" title="Traducir" class="btn btn-light">Traducir</button>
+
+        <div id="pestanas">
+            <ul id=lista>
+            </ul>
+        </div>
+    </div>
+
+
+    <div id="contenidopestanas">
+        <div id="textForm">
+            <form class="form" id="myForm">
+               <!-- <input type="button" onclick="traducir()" value="Traducir" title="Traducir" class="btn btn-light">-->
+                <textarea name="textarea0" id="textarea0" style="width:900px; height:500px"></textarea>
+            </form>
+        </div>
+        <div class="column2">
+            <h1>Consolas</h1>
+
+            <div class="consolaJS">
+                <h4>Consola JavaScript</h4>
+                <textarea id="conJS" style="width:600px; height:250px">
+                    </textarea>
+            </div>
+            <div class="consolaPT">
+                <h4>Consola Python</h4>
+                <textarea id="conPT" style="width:600px; height:250px">
+                    </textarea>
             </div>
 
-            <body>
-                <div id="contenidopestanas">
-                </div>
-            </body>
-            <div class="column2">
-                <h1>Consolas</h1>
-                
-                <div class="consolaJS">
-                  <h4>Consola JavaScript</h4>
-                  <textarea id="conJS" style="width:600px; height:250px">
-                    </textarea>
-                </div>
-                <div class="consolaPT">
-                  <h4>Consola Python</h4>
-                  <textarea id="conPT" style="width:600px; height:250px">
-                    </textarea>
-                </div>
-        
-              </div>
         </div>
-       
-    </body>
+
+    </div>
+
+</body>
+
 </html>

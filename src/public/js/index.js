@@ -1,3 +1,5 @@
+
+
 var contador=0;
 function get_cont(){
     return contador++;
@@ -133,8 +135,8 @@ function AbrirArchivo(files){
     var file = files[0];
     var reader = new FileReader();
     reader.onload = function (e) {
-        var act=document.getElementById(get_vent().replace("textarea","cpestana"));
-        var tact=document.getElementById(get_vent());
+        var act=document.getElementById("textarea0");
+        var tact=document.getElementById("textarea0");
         tact.value = e.target.result;
 
         while (act.firstChild) {
@@ -156,7 +158,7 @@ function AbrirArchivo(files){
     reader.readAsText(file);
     file.clear;
 
-    var a=document.getElementById(get_vent().replace("textarea","a"));
+    var a=document.getElementById("textarea0");
     a.text=file.name;
     linkedlist(get_vent(),file.name);
 
@@ -196,10 +198,112 @@ function DescargarArchivo(){
 }
 
 /* *-------------------------------------*TRADUCCION--------------------*/
+var myForm = document.getElementById("myForm");
+if(myForm)
+{
+    myForm.addEventListener('submit',function(e){
+        e.preventDefault();
+        const formData=new FormData(this);
+        fetch("http://localhost:8080/texto",{
+            method:'POST',
+            body:formData
+        }).then(function(response){
+            return response.text();
+        }).then(function(text){
+            console.log(text);
+        }).catch(function(error){
+            console.error(error);
+        })
+    
+    });
+}
+
+
 function traducir(){
+    const myForm=document.getElementById('myForm');
+    console.log("traducir");
+
+    var form = new FormData(document.getElementById('myForm'));
+    fetch("http://localhost:8080/texto", {
+        method: "POST",
+        body: form
+    });
+    console.log(form);
+    /*
+    var ta=document.getElementById(get_vent()).value;
+    console.log(ta);
+    fetch('../texto', {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({Nombre:ta}),
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+  */
+    /*
+    console.log(ta);
+    fetch("http://localhost:8080/texto", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: ta
+    })
+    .then(function(response) {
+        console.log('response =', response);
+        return response.json();
+    })
+    .then(function(data) {
+        console.log('data = ', data);
+    })
+    .catch(function(err) {
+        console.error(err);
+    });
+    */
+/*
+    var url = "http://localhost:8080/texto";
     var ta=document.getElementById(get_vent());
+   data = {};
+   data.data = ta;
+
+   defaultFetchParam = {
+       method: 'POST',
+       mode: 'cors',
+       cache: 'no-cache',
+       headers: {
+           "Content-Type": "application/json",
+       },
+       body: JSON.stringify(data),
+   };
+
+
+   fetch(url, defaultFetchParam)
+       .then(function (response) {
+           console.log("response", response)
+           return response.json()
+       })
+       .then(function (result) {
+           console.log("result", result);
+       })
+*/
+    /*
+    var data = new FormData();
+    var ta=document.getElementById(get_vent());
+    data.append('data',ta);
     var contenido=ta.value;
-    var res = contenido.split("\n");
+    var tempT="";
+    for (let index = 0; index < contenido.length; index++) {
+        let car=contenido[index];
+        if (car=='\"') {
+            tempT=tempT+"¡";
+        }else{
+            tempT=tempT+car;
+        }
+        
+    }
+   
+    var res = tempT.split("\n");
     var temp="";
     for (var i = 0; i < res.length; i++) {
       if(i==res.length-1){
@@ -211,7 +315,8 @@ function traducir(){
       
       
    }
-    console.log(contenido);
+
+   console.log(temp);
     fetch('../texto', {
         method: 'POST',
         body: JSON.stringify({"Nombre":temp}),
@@ -220,5 +325,14 @@ function traducir(){
         }
     }).then(res => res.json())
     .catch(error => console.error('Error:', error))
-    
+   
+  console.log(data);
+    fetch('../texto', {
+        method: 'POST',
+        body: data,
+        
+    }).then(response => response.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => console.log('Success:', response));
+    */
 }

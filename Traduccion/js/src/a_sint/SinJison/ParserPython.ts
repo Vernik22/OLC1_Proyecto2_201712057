@@ -14,6 +14,7 @@ export class Parser {
         this.listaTokens = listaTokens;
         this.errorSintatico = [];
         this.pos = 0;
+        this.quitarComentarios();
     }
 
     emparejar(terminal: TypeToken) {
@@ -31,18 +32,36 @@ export class Parser {
             this.errorSintatico.push("error sintactico no se esperaba: " + this.preAnalisis.toString() + " val:" + this.listaTokens[this.pos].lexema);
             //RECUPERACION DE ERRORES
             while (this.pos < this.listaTokens.length) {
-                //console.log(this.lista_Tokens[this.pos].token+" == "+TypeToken.T_PYCOMA)    
-                if (this.listaTokens[this.pos].token == TypeToken.PCOMA
-                    || this.listaTokens[this.pos].token == TypeToken.LLAVEDER) {
-                    this.pos++;
+                //console.log(this.lista_Tokens[this.pos].token+" == "+TypeToken.T_PYCOMA)  
+                if (this.listaTokens[this.pos].token == TypeToken.PUBLIC && this.listaTokens[this.pos + 1].token == TypeToken.CLASS) {
                     this.preAnalisis = this.listaTokens[this.pos].token;
                     break;
-                }
+                } else if (this.listaTokens[this.pos].token == TypeToken.PUBLIC && this.listaTokens[this.pos + 1].token == TypeToken.INTERFACE) {
+                    this.preAnalisis = this.listaTokens[this.pos].token;
+                    break;
+                } else if (this.listaTokens[this.pos].token == TypeToken.IF || this.listaTokens[this.pos].token == TypeToken.FOR || this.listaTokens[this.pos].token == TypeToken.WHILE || this.listaTokens[this.pos].token == TypeToken.DO) {
+                    this.preAnalisis = this.listaTokens[this.pos].token;
+                    break;
+                } else
+                    if (this.listaTokens[this.pos].token == TypeToken.PCOMA
+                        || this.listaTokens[this.pos].token == TypeToken.LLAVEDER) {
+                        this.pos++;
+                        this.preAnalisis = this.listaTokens[this.pos].token;
+                        break;
+                    }
                 this.pos++;
             }
-            if (this.preAnalisis == TypeToken.ID) {
-                this.METODOS();
-            }
+            if (this.preAnalisis == TypeToken.PUBLIC && this.preAnalisis + 1 == TypeToken.CLASS) {
+                this.BIGINCOI();
+            } else if (this.preAnalisis == TypeToken.PUBLIC && this.preAnalisis + 1 == TypeToken.INTERFACE) {
+                this.BIGINCOI();
+            } else if (this.preAnalisis == TypeToken.IF || this.preAnalisis == TypeToken.FOR || this.preAnalisis == TypeToken.WHILE || this.preAnalisis == TypeToken.DO) {
+                this.CUERPO();
+
+            } else
+                if (this.preAnalisis == TypeToken.ID) {
+                    this.METODOS();
+                }
         }
     }
     //-----------------GRAMATICA---------------
@@ -82,8 +101,10 @@ export class Parser {
     CI2() {
         if (this.preAnalisis == TypeToken.CLASS) {
             this.CLASSBIGIN();
+            this.BIGINCOI();
         } else if (this.preAnalisis == TypeToken.INTERFACE) {
             this.INTERFACEBIGIN();
+            this.BIGINCOI();
         } else {
             //EPSILON
         }
@@ -96,7 +117,7 @@ export class Parser {
         this.emparejar(TypeToken.LLAVEIZQ);
         this.METODOS();
         this.emparejar(TypeToken.LLAVEDER);
-        this.CI2();
+        this.BIGINCOI();
     }
 
     INTERFACEBIGIN() {
@@ -105,7 +126,7 @@ export class Parser {
         this.emparejar(TypeToken.LLAVEIZQ);
         this.CUERPOINT();
         this.emparejar(TypeToken.LLAVEDER);
-        this.CI2();
+        this.BIGINCOI();
     }
 
     MAIN() {
@@ -148,31 +169,52 @@ export class Parser {
         //Probar cadenas vacias
         if (this.preAnalisis == TypeToken.COMILLAS) {
             this.emparejar(TypeToken.COMILLAS);
-            if (this.preAnalisis == TypeToken.CADENA) {
-                this.emparejar(TypeToken.CADENA);
-            }
+            this.IMPCUEP();
             this.emparejar(TypeToken.COMILLAS);
             this.IMPCUE();
         } else if (this.preAnalisis == TypeToken.COMILLASIMPLE) {
-
+            this.emparejar(TypeToken.COMILLASIMPLE);
+            this.IMPCUEP();
+            this.emparejar(TypeToken.COMILLASIMPLE);
+            this.IMPCUE();
         } else if (this.preAnalisis == TypeToken.ID) {
-
+            this.emparejar(TypeToken.ID);
+            this.IMPCUE();
         } else if (this.preAnalisis == TypeToken.NUMERO || this.preAnalisis == TypeToken.MAS || this.preAnalisis == TypeToken.GUION) {
             this.E();
+            this.IMPCUE();
         } else {
 
             //EPSILON
         }
     }
+    IMPCUEP() {
+        if (this.preAnalisis == TypeToken.CADENA) {
+            this.emparejar(TypeToken.CADENA);
+        } else {
+            //epsilon
+        }
+    }
 
     METODOS() {
-        if (this.preAnalisis == TypeToken.PUBLIC && this.preAnalisis + 1 == TypeToken.STATIC && this.preAnalisis + 2 == TypeToken.VOID) {
+        if (this.preAnalisis == TypeToken.PUBLIC && this.listaTokens[this.pos + 1].token == TypeToken.STATIC && this.listaTokens[this.pos + 2].token == TypeToken.VOID) {
             this.MAIN();
             this.METODOS();
         } else if (this.preAnalisis == TypeToken.PUBLIC || this.preAnalisis == TypeToken.PRIVATE || this.preAnalisis == TypeToken.PROTECTED) {
             this.MODIFICADOR();
             this.TIPO();
             this.emparejar(TypeToken.ID);
+            this.METODOSP();
+        } else if (this.preAnalisis == TypeToken.STRING || this.preAnalisis == TypeToken.INT || this.preAnalisis == TypeToken.CHAR || this.preAnalisis == TypeToken.BOOLEAN || this.preAnalisis == TypeToken.FLOAT || this.preAnalisis == TypeToken.DOUBLE) {
+            this.DECLARACION();
+            this.METODOS();
+        } else {
+            //epsilon
+        }
+
+    }
+    METODOSP() {
+        if (this.preAnalisis == TypeToken.PARENTESISIZQ) {
             this.emparejar(TypeToken.PARENTESISIZQ);
             this.PARAMETROS();
             this.emparejar(TypeToken.PARENTESISDER);
@@ -180,10 +222,14 @@ export class Parser {
             this.CUERPO();
             this.emparejar(TypeToken.LLAVEDER);
             this.METODOS();
-        } else {
-            //epsilon
+        } else if (this.preAnalisis == TypeToken.PCOMA) {
+            this.emparejar(TypeToken.PCOMA);
+            this.METODOS();
         }
-
+        else {
+            this.DECLARACIONP();
+            this.METODOS();
+        }
     }
 
     CUERPOINT() {
@@ -196,16 +242,16 @@ export class Parser {
             this.emparejar(TypeToken.PARENTESISDER);
             this.emparejar(TypeToken.PCOMA);
             this.CUERPOINT();
-        }else if (this.preAnalisis == TypeToken.VOID || this.preAnalisis == TypeToken.STRING || this.preAnalisis == TypeToken.INT || this.preAnalisis == TypeToken.CHAR || this.preAnalisis == TypeToken.BOOLEAN || this.preAnalisis == TypeToken.FLOAT || this.preAnalisis == TypeToken.DOUBLE) {
+        } else if (this.preAnalisis == TypeToken.VOID || this.preAnalisis == TypeToken.STRING || this.preAnalisis == TypeToken.INT || this.preAnalisis == TypeToken.CHAR || this.preAnalisis == TypeToken.BOOLEAN || this.preAnalisis == TypeToken.FLOAT || this.preAnalisis == TypeToken.DOUBLE) {
             this.TIPO();
             this.emparejar(TypeToken.ID);
             this.CUERPOINTP();
             this.CUERPOINT();
-        }else{
+        } else {
             //Epsilon
         }
     }
-    CUERPOINTP(){
+    CUERPOINTP() {
         if (this.preAnalisis == TypeToken.PARENTESISIZQ) {
             this.emparejar(TypeToken.PARENTESISIZQ);
             this.PARAMETROS();
@@ -252,15 +298,69 @@ export class Parser {
         } else if (this.preAnalisis == TypeToken.STRING || this.preAnalisis == TypeToken.INT || this.preAnalisis == TypeToken.CHAR || this.preAnalisis == TypeToken.BOOLEAN || this.preAnalisis == TypeToken.FLOAT || this.preAnalisis == TypeToken.DOUBLE) {
             this.DECLARACION();
             this.CUERPO();
-        } else if (this.preAnalisis == TypeToken.SYSTEM && this.preAnalisis + 1 == TypeToken.PUNTO && this.preAnalisis + 2 == TypeToken.OUT) {
+        } else if (this.preAnalisis == TypeToken.SYSTEM && this.listaTokens[this.pos + 1].token == TypeToken.PUNTO && this.listaTokens[this.pos + 2].token == TypeToken.OUT) {
             this.IMPRIMIR();
             this.CUERPO();
         } else if (this.preAnalisis == TypeToken.ID) {
-            this.ASIGNACION();
-            this.DECLARACION();
-            this.CUERPO();
+            if (this.listaTokens[this.pos + 1].token == TypeToken.PARENTESISIZQ) {
+                this.emparejar(TypeToken.ID);
+                this.LLMETOD();
+                this.CUERPO();
+            } else if (this.listaTokens[this.pos + 1].token == TypeToken.MAS || this.listaTokens[this.pos + 1].token == TypeToken.GUION) {
+                this.E();
+                this.ASIGNACION();
+                this.DECLARACION();
+                this.CUERPO();
+            } else {
+                this.ASIGNACION();
+                this.DECLARACION();
+                this.CUERPO();
+            }
+
+
+        } else if (this.preAnalisis == TypeToken.RETURN) {
+            this.emparejar(TypeToken.RETURN);
+            this.RETURNCUE();
+            this.emparejar(TypeToken.PCOMA);
+        } else if (this.preAnalisis == TypeToken.CONTINUE) {
+            this.emparejar(TypeToken.CONTINUE);
+            this.emparejar(TypeToken.PCOMA);
+        } else if (this.preAnalisis == TypeToken.BREAK) {
+            this.emparejar(TypeToken.BREAK);
+            this.emparejar(TypeToken.PCOMA);
         } else {
             //EPSILON
+        }
+    }
+    LLMETOD() {
+        if (this.preAnalisis == TypeToken.PARENTESISIZQ) {
+            this.emparejar(TypeToken.PARENTESISIZQ);
+            this.ASIGNACION();
+            this.DECLARACIONP();
+            this.emparejar(TypeToken.PARENTESISDER);
+            this.emparejar(TypeToken.PCOMA);
+        }
+    }
+    RETURNCUE() {
+        if (this.preAnalisis == TypeToken.COMILLAS) {
+            this.emparejar(TypeToken.COMILLAS);
+            this.IMPCUEP();
+            this.emparejar(TypeToken.COMILLAS);
+            this.RETURNCUE();
+        } else if (this.preAnalisis == TypeToken.COMILLASIMPLE) {
+            this.emparejar(TypeToken.COMILLASIMPLE);
+            this.IMPCUEP();
+            this.emparejar(TypeToken.COMILLASIMPLE);
+            this.RETURNCUE();
+        } else if (this.preAnalisis == TypeToken.ID) {
+            this.emparejar(TypeToken.ID);
+            this.RETURNCUE();
+        }
+        else if (this.preAnalisis == TypeToken.NUMERO || this.preAnalisis == TypeToken.MAS || this.preAnalisis == TypeToken.GUION) {
+            this.E();
+            this.RETURNCUE()
+        } else {
+            //epsilon
         }
     }
 
@@ -269,7 +369,7 @@ export class Parser {
         this.emparejar(TypeToken.FOR);
         this.emparejar(TypeToken.PARENTESISIZQ);
         this.DECLARACION();
-        this.emparejar(TypeToken.PCOMA);
+
         this.EXP();
         this.emparejar(TypeToken.PCOMA);
         this.EXP();
@@ -359,12 +459,12 @@ export class Parser {
             this.emparejar(TypeToken.XOR);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis == TypeToken.MAYORQ && this.preAnalisis + 1 == TypeToken.ASIGNACION) {
+        } else if (this.preAnalisis == TypeToken.MAYORQ && this.listaTokens[this.pos + 1].token == TypeToken.ASIGNACION) {
             this.emparejar(TypeToken.MAYORQ);
             this.emparejar(TypeToken.ASIGNACION);
             this.E();
             this.EXP();
-        } else if (this.preAnalisis == TypeToken.MENORQ && this.preAnalisis + 1 == TypeToken.ASIGNACION) {
+        } else if (this.preAnalisis == TypeToken.MENORQ && this.listaTokens[this.pos + 1].token == TypeToken.ASIGNACION) {
             this.emparejar(TypeToken.MENORQ);
             this.emparejar(TypeToken.ASIGNACION);
             this.E();
@@ -425,6 +525,10 @@ export class Parser {
             this.F();
             this.TP();
             //Agregar punto para probar
+        }else if(this.preAnalisis == TypeToken.PUNTO){
+            this.emparejar(TypeToken.PUNTO);
+            this.F();
+            this.TP();
         } else {
             //epsilon
         }
@@ -432,11 +536,30 @@ export class Parser {
 
     F() {
         if (this.preAnalisis == TypeToken.PARENTESISIZQ) {
-
+            this.emparejar(TypeToken.PARENTESISIZQ);
+            this.E();
+            this.emparejar(TypeToken.PARENTESISDER);
         } else if (this.preAnalisis == TypeToken.NUMERO) {
-
+            this.emparejar(TypeToken.NUMERO);
+            this.E();
         } else if (this.preAnalisis == TypeToken.GUION) {
-
+            this.emparejar(TypeToken.GUION);
+            this.F();
+        } else if (this.preAnalisis == TypeToken.ID) {
+            this.emparejar(TypeToken.ID);
+            this.E();
+        } else if (this.preAnalisis == TypeToken.COMILLAS || this.preAnalisis == TypeToken.COMILLASIMPLE) {
+            if (this.preAnalisis == TypeToken.COMILLAS) {
+                this.emparejar(TypeToken.COMILLAS);
+                this.IMPCUEP();
+                this.emparejar(TypeToken.COMILLAS);
+                this.E();
+            } else {
+                this.emparejar(TypeToken.COMILLASIMPLE);
+                this.IMPCUEP();
+                this.emparejar(TypeToken.COMILLASIMPLE);
+                this.E();
+            }
         } else {
             //nada
         }
@@ -511,12 +634,14 @@ export class Parser {
         }
         this.ASIGNACION();
         this.DECLARACIONP();
+        this.emparejar(TypeToken.PCOMA);
     }
 
     DECLARACIONP() {
-        if (this.preAnalisis == TypeToken.PCOMA) {
-            this.emparejar(TypeToken.PCOMA);
-        } else if (this.preAnalisis == TypeToken.COMA) {
+        //if (this.preAnalisis == TypeToken.PCOMA) {
+        // this.emparejar(TypeToken.PCOMA);
+        //} else 
+        if (this.preAnalisis == TypeToken.COMA) {
             this.emparejar(TypeToken.COMA);
             this.ASIGNACION();
             this.DECLARACIONP();
@@ -531,12 +656,51 @@ export class Parser {
             this.ASIGNACION();
         } else if (this.preAnalisis == TypeToken.ASIGNACION) {
             this.emparejar(TypeToken.ASIGNACION);
-            if (this.preAnalisis == TypeToken.NEW) {
-                this.emparejar(TypeToken.NEW);
-            }
+            this.ASIGP()
             this.E();
-        } else {
+            this.ASIGNACION();
+        }
+        //else if (this.preAnalisis==TypeToken.PCOMA) {
+        //   this.emparejar(TypeToken.PCOMA);
+        //}
+        else {
             //EPSILON
         }
+    }
+
+    ASIGP() {
+        if (this.preAnalisis == TypeToken.NEW) {
+            this.emparejar(TypeToken.NEW);
+            this.emparejar(TypeToken.ID);
+            this.emparejar(TypeToken.PARENTESISIZQ);
+            this.PARAMETROS();
+            this.emparejar(TypeToken.PARENTESISDER);
+            this.emparejar(TypeToken.PCOMA);
+            this.ASIGNACION();
+        }
+    }
+
+    getListaErrores(): String[] {
+        return this.errorSintatico;
+    }
+
+    quitarComentarios() {
+        var auxTokens = [];
+        for (let index = 0; index < this.listaTokens.length; index++) {
+            if (this.listaTokens[index].token == TypeToken.DIAGONAL) {
+                if (this.listaTokens[index + 1].token == TypeToken.DIAGONAL) {
+                    index = index + 2;
+                } else if (this.listaTokens[index + 1].token == TypeToken.ASTERISCO) {
+                    index = index + 4
+                } else {
+                    auxTokens.push(this.listaTokens[index]);
+                }
+
+            } else {
+                auxTokens.push(this.listaTokens[index]);
+            }
+
+        }
+        this.listaTokens = auxTokens;
     }
 }

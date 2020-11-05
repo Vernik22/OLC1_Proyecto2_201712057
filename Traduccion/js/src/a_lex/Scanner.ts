@@ -22,7 +22,10 @@ export class Scanner {
         this.cadena = "";
         this.lexema = "";
     }
-
+    getErrores():number[]{
+        return this.pos_errores;
+    }
+    
     Analizar(entrada: String): Token[] {
 
         this.estadoA(entrada);
@@ -45,6 +48,14 @@ export class Scanner {
                 this.lista_Tokens.push(new Token(TypeToken.PCOMA, ';'));
             } else if (c == '.') {
                 this.lista_Tokens.push(new Token(TypeToken.PUNTO, '.'));
+            }else if (c == '\'') {
+                this.lista_Tokens.push(new Token(TypeToken.COMILLASIMPLE, '\''));
+                this.pos += 1;
+                let sizeCadena = this.getSizeCadena(this.pos);
+                this.estadoE(this.pos, this.pos + sizeCadena);
+                this.pos = this.pos + sizeCadena;
+                this.estadoJ(this.pos);
+
             } else if (c == '"') {
                 this.lista_Tokens.push(new Token(TypeToken.COMILLAS, '"'));
                 this.pos += 1;
@@ -94,20 +105,20 @@ export class Scanner {
                 this.lista_Tokens.push(new Token(TypeToken.GUIONBAJO, '_'));
             } else if (c == ',') {
                 this.lista_Tokens.push(new Token(TypeToken.COMA, ','));
-            }else if (c == '^') {
+            } else if (c == '^') {
                 this.lista_Tokens.push(new Token(TypeToken.XOR, '^'));
             }
             //---estado A a estado G (Numeros)
             else if (this.isNumber(c)) {
                 let sizeLexema = this.getSizeLexema(this.pos);
                 this.estadoG(this.pos, this.pos + sizeLexema);
-                this.pos = this.pos + sizeLexema;
+                this.pos = this.pos + sizeLexema - 1;
             }
             //---estado A a estado C (Reservadas e IDs)
             else if (this.isLetra(c)) {
                 let sizeLexema = this.getSizeLexema(this.pos);
                 this.estadoC(this.pos, this.pos + sizeLexema);
-                this.pos = this.pos + sizeLexema;
+                this.pos = this.pos + sizeLexema - 1;
             }
             //---Otros
             else if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
@@ -117,7 +128,7 @@ export class Scanner {
                 } else {
                     this.columna += 1;
                 }
-                this.pos += 1;
+
             }
             //---Manejo de Errores
             else {
@@ -154,6 +165,10 @@ export class Scanner {
             this.estadoI(this.pos, this.pos + sizeComentario);
             this.pos = this.pos + sizeComentario;
         } else {
+            let f = this.cadena.charAt(posActual);
+            if (f == '/') {
+                this.lista_Tokens.push(new Token(TypeToken.DIAGONAL, '/'));
+            }
             if (c != "\n") {
                 this.lista_Errores.push(new Error(this.columna, this.fila, c));
                 this.pos_errores.push(posActual + 1);
@@ -239,7 +254,7 @@ export class Scanner {
                 this.lista_Errores.push(new Error(this.columna, this.fila, c));
                 this.pos_errores.push(posActual);
             }
-            posActual+=1;
+            posActual += 1;
         }
     }
 
@@ -273,13 +288,13 @@ export class Scanner {
         let c = this.cadena[posActual];
         if (c == '"') {
             this.lista_Tokens.push(new Token(TypeToken.COMILLAS, c));
-            this.pos += 1;
+            
         } else if (c == "'") {
             this.lista_Tokens.push(new Token(TypeToken.COMILLASIMPLE, c));
-            this.pos += 1;
+            
         } else if (c == '`') {
             this.lista_Tokens.push(new Token(TypeToken.TILDE, c));
-            this.pos += 1;
+            
         }
     }
 
@@ -333,7 +348,7 @@ export class Scanner {
     getSizeLexema(posInicial: number): number {
         let longitud = 0;
         for (posInicial; posInicial < this.cadena.length - 1; posInicial++) {
-            if (this.cadena[posInicial] == ' ' || this.cadena[posInicial] == '{' || this.cadena[posInicial] == '}' || this.cadena[posInicial] == '(' || this.cadena[posInicial] == ')' || this.cadena[posInicial] == ',' || this.cadena[posInicial] == '.' || this.cadena[posInicial] == ';' || this.cadena[posInicial] == ':' || this.cadena[posInicial] == '"' || this.cadena[posInicial] == "'" || this.cadena[posInicial] == '`' || this.cadena[posInicial] == '[' || this.cadena[posInicial] == ']' || this.cadena[posInicial] == '*' || this.cadena[posInicial] == '+' || this.cadena[posInicial] == '=' || this.cadena[posInicial] == '&' || this.cadena[posInicial] == '|' || this.cadena[posInicial] == '<' || this.cadena[posInicial] == '>' || this.cadena[posInicial] == '!' || this.cadena[posInicial] == '~' || this.cadena[posInicial] == '\n' || this.cadena[posInicial] == '\t' || this.cadena[posInicial] == '\r') {
+            if (this.cadena[posInicial] == ' ' || this.cadena[posInicial] == '{' || this.cadena[posInicial] == '}' || this.cadena[posInicial] == '(' || this.cadena[posInicial] == ')' || this.cadena[posInicial] == ',' || this.cadena[posInicial] == '.' || this.cadena[posInicial] == ';' || this.cadena[posInicial] == ':' || this.cadena[posInicial] == '"' || this.cadena[posInicial] == "'" || this.cadena[posInicial] == '`' || this.cadena[posInicial] == '[' || this.cadena[posInicial] == ']' || this.cadena[posInicial] == '*' || this.cadena[posInicial] == '-' || this.cadena[posInicial] == '/' || this.cadena[posInicial] == '+' || this.cadena[posInicial] == '=' || this.cadena[posInicial] == '&' || this.cadena[posInicial] == '|' || this.cadena[posInicial] == '<' || this.cadena[posInicial] == '>' || this.cadena[posInicial] == '!' || this.cadena[posInicial] == '~' || this.cadena[posInicial] == '\n' || this.cadena[posInicial] == '\t' || this.cadena[posInicial] == '\r') {
                 if (this.cadena[posInicial] == '\n') {
                     this.fila += 1;
                     this.columna = 1;
@@ -539,7 +554,7 @@ export class Scanner {
         } else if (palabra.toLocaleLowerCase() == "println") {
             this.lista_Tokens.push(new Token(TypeToken.PRINTLN, 'println'));
             return true;
-        }else if (palabra.toLocaleLowerCase() == "package") {
+        } else if (palabra.toLocaleLowerCase() == "package") {
             this.lista_Tokens.push(new Token(TypeToken.PACKAGE, 'package'));
             return true;
         }

@@ -85,13 +85,13 @@ GRAMATICA
 
 <BIGINCOI>:=<public><CI2>
 
-<CI2>:=<CLASSBIGIN>
-	|<INTERFACEBIGIN>
+<CI2>:=<CLASSBIGIN><BIGINCOI>
+	|<INTERFACEBIGIN><BIGINCOI>
 	|<epsilon>
 
-<CLASSBIGIN>:=<class><nombre><llaveiz><METODOS><llaveder>
+<CLASSBIGIN>:=<class><nombre><llaveiz><METODOS><llaveder><BIGINCOI>
 
-<INTERFACEBIGIN>:=<interface><nombre><llaveiz><CUERPOINT><llaveder>
+<INTERFACEBIGIN>:=<interface><nombre><llaveiz><CUERPOINT><llaveder><BIGINCOI>
 	
 <MAIN>:=<public><static><void><main><parentesis(><TIPO><corchete[><corchete]><nombre><parentesis)><CUERPO>
 
@@ -100,15 +100,22 @@ GRAMATICA
 <PRINTTYPE>:=<println>
 		|<print>
 
-<IMPCUE>:=<comillas><cadena><comillas><IMPCUE>
+<IMPCUE>:=<comillas><IMPCUEP><comillas><IMPCUE>
 		|<comillasimple><cadena><comillasimple><IMPCUE>
 		|<id><IMPCUE>
 		|<E><IMPCUE>
 		|<epsilon>
 
-<METODOS>:=<MODIFICADOR><TIPO><nombre><parentesisiz><PARAMETROS><parentesisder><llaveiz><CUERPO><llaveder><METODOS>
+<IMPCUEP>:=<cadena>
+		|<epsilon>
+
+<METODOS>:=<MODIFICADOR><TIPO><nombre><METODOSP>
+		|<TIPO><nombre><METODOSP>
 		|<MAIN><METODOS>
 		|<epsilon>
+
+<METODOSP>:=<parentesisiz><PARAMETROS><parentesisder><llaveiz><CUERPO><llaveder><METODOS>
+		|<DECLARACIONP><METODOS>
 
 <CUERPOINT>:=<MODIFICADOR><TIPO><id><parentesisiz><PARAMETROS><parentesisder><puntoycoma><CUERPOINT>
 			|<TIPO><id><CUERPOINTP><CUERPOINT>
@@ -130,15 +137,24 @@ GRAMATICA
 	|<DECLARACION><CUERPO>
 	|<ASIGNACION><CUERPO>
 	|<IMPRIMIR><CUERPO>
+	|<break><puntoycoma>
+	|<continue><puntoycoma>
+	|<return><RETURNCUE><puntoycoma>
 	|<epsilon>
 
-<DECLARACION>:=<TIPO><ASIGNACION><DECLARACIONP>
-<DECLARACIONP>:=<puntoycoma>
-		|<coma><ASIGNACION><DECLARACIONP>
+<RETURNCUE>:=<E><RETURNCUE>
+			|<comillas><cadena><comillas><RETURNCUE>
+			|<id><RETURNCUE>
+			|<epsilon>
+
+<DECLARACION>:=<TIPO><ASIGNACION><DECLARACIONP><puntoycoma>
+<DECLARACIONP>:=<coma><ASIGNACION><DECLARACIONP>
 
 <ASIGNACION>:=<nombre><ASIGNACION>
-            |<=><ASIGNACIONP>
+            |<=><ASIGP><E>
             |<punto y coma>
+<ASIGP>:=<new><id><parentesisiz><PARAMETROS><parentesisder><puntoycoma><ASIGNACION>
+		|<epsilon>
 
 <SFOR>:=<for><parentesisiz><DECLARACION><puntoycoma><EXP><puntoycoma><EXP><parentesisder><llaveiz><CUERPO><llaveder>
 
