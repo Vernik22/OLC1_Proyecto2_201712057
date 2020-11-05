@@ -545,6 +545,15 @@ export class Parser {
         } else if (this.preAnalisis == TypeToken.GUION) {
             this.emparejar(TypeToken.GUION);
             this.F();
+        }else if(this.preAnalisis == TypeToken.TRUE || this.preAnalisis == TypeToken.FALSE){
+            if (this.preAnalisis == TypeToken.TRUE) {
+                this.emparejar(TypeToken.TRUE);
+                this.E();
+            }else{
+                this.emparejar(TypeToken.FALSE);
+                this.E();
+            }
+           
         } else if (this.preAnalisis == TypeToken.ID) {
             this.emparejar(TypeToken.ID);
             this.E();
