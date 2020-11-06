@@ -136,8 +136,8 @@ GRAMATICA
 <ELSE>:=<else><ELSE2>
 	|<epsilon>
 <ELSE2>:=<SIF>
-		|<llaveiz><CUERPO><llaveder>
-		|<epsilon>
+	|<llaveiz><CUERPO><llaveder>
+	|<epsilon>
 
 
 <EXP>:=<admiracion><E><EXPP>
@@ -204,3 +204,10 @@ Se utilizo un metodo llamado "emparejar" para indicar que es un terminal y ha ll
 ![D](./imagenes/Sint2.png)
 
 Asi mismo se implementa en este mismo metodo la recuperacion de errores con algun terminal como por ejemplo un punto y coma o una llave derecha, estos dos fueron los simbolos utilizados para recuperacion de errores.
+
+#### Traducción 
+Para la traducción se implemento un metodo en el cual se iba verificando que token era el siguiente, esto debido a que ya ha sido analizado y solo se traduce si el codigo es correcto, si el codigo contiene errores sintacticos el codigo no es traducido.
+
+![D](./imagenes/Trad.png)
+
+Se van verificando los tokens siguientes y asi concatenando y generando la traduccion.
