@@ -67,24 +67,117 @@ export class Traduccion {
                     }
 
                 }
-                this.traduccion.push(this.tabs() + "while " + temp + " :");
-                this.tabulaciones++;
+                if(this.listaTokens[this.controlToken+1].token == TypeToken.PCOMA){
+                    this.tabulaciones++;
+                    this.traduccion.push(this.tabs() + "if " + temp + " :");
+                    this.tabulaciones++;
+                    this.traduccion.push(this.tabs() + "break");
+                    this.tabulaciones-=2;
+                }else{
+                    this.traduccion.push(this.tabs() + "while " + temp + " :");
+                    this.tabulaciones++;
+                }
+                
             } else if (this.tockenActual.token == TypeToken.DO) {
-
-                this.traduccion.push(this.tabs() + "while True:" + temp + " :");
+                this.traduccion.push(this.tabs() + "while True:");
                 this.tabulaciones++;
             } else if (this.tockenActual.token == TypeToken.IF) {
-                if (this.listaTokens[this.controlToken - 1].token == TypeToken.ELSE ){
+                if (this.listaTokens[this.controlToken - 1].token == TypeToken.ELSE) {
+                    let temp = "";
+                    for (let index = this.controlToken + 2; index < this.listaTokens.length; index++) {
+                        if (this.listaTokens[index].token != TypeToken.PARENTESISDER) {
+                            temp = temp + "" + this.listaTokens[index].lexema;
+                        } else {
+
+                            this.controlToken = index;
+                            break;
+                        }
 
                     }
-            }else if(this.tockenActual.token == TypeToken.ELSE){
-                if (this.listaTokens[this.controlToken + 1].token == TypeToken.IF){
+                    this.traduccion.push(this.tabs() + "elif " + temp + " :");
+                    this.tabulaciones++;
+                } else {
+                    let temp = "";
+                    for (let index = this.controlToken + 2; index < this.listaTokens.length; index++) {
+                        if (this.listaTokens[index].token != TypeToken.PARENTESISDER) {
+                            temp = temp + "" + this.listaTokens[index].lexema;
+                        } else {
+
+                            this.controlToken = index;
+                            break;
+                        }
+
+                    }
+                    this.traduccion.push(this.tabs() + "if " + temp + " :");
+                    this.tabulaciones++;
+                }
+            } else if (this.tockenActual.token == TypeToken.ELSE) {
+                if (this.listaTokens[this.controlToken + 1].token == TypeToken.IF) {
+
+                } else {
+                    this.traduccion.push(this.tabs() + "else :");
+                    this.tabulaciones++;
+                }
+            } else if (this.tockenActual.token == TypeToken.BREAK) {
+                this.traduccion.push(this.tabs() + "break");
+            } else if (this.tockenActual.token == TypeToken.CONTINUE) {
+                this.traduccion.push(this.tabs() + "continue");
+            } else if (this.tockenActual.token == TypeToken.RETURN) {
+                let temp = "";
+                for (let index = this.controlToken + 1; index < this.listaTokens.length; index++) {
+                    if (this.listaTokens[index].token != TypeToken.PCOMA) {
+                        temp = temp + "" + this.listaTokens[index].lexema;
+                    } else {
+
+                        this.controlToken = index;
+                        break;
+                    }
 
                 }
-            }
-            /*else if(this.tockenActual.token == TypeToken.STRING || this.tockenActual.token == TypeToken.INT || this.tockenActual.token == TypeToken.CHAR || this.tockenActual.token == TypeToken.BOOLEAN || this.tockenActual.token == TypeToken.FLOAT || this.tockenActual.token == TypeToken.DOUBLE) {
+                this.traduccion.push(this.tabs() + "return " + temp);
+            } else if (this.tockenActual.token == TypeToken.SYSTEM && this.listaTokens[this.controlToken + 1].token == TypeToken.PUNTO && this.listaTokens[this.controlToken + 2].token == TypeToken.OUT) {
+                if (this.listaTokens[this.controlToken + 4].token == TypeToken.PRINTLN) {
+                    let temp = "";
+                    for (let index = this.controlToken + 6; index < this.listaTokens.length; index++) {
+                        if (this.listaTokens[index].token != TypeToken.PCOMA) {
+                            temp = temp + "" + this.listaTokens[index].lexema;
+                        } else {
 
-            }*/
+                            this.controlToken = index;
+                            break;
+                        }
+
+                    }
+                    this.traduccion.push(this.tabs() + "print(" + temp + ";");
+                } else {
+                    let temp = "";
+                    for (let index = this.controlToken + 6; index < this.listaTokens.length; index++) {
+                        if (this.listaTokens[index].token != TypeToken.PARENTESISDER && this.listaTokens[index + 1].token != TypeToken.PCOMA) {
+                            temp = temp + "" + this.listaTokens[index].lexema;
+                        } else {
+
+                            this.controlToken = index;
+                            break;
+                        }
+
+                    }
+                    this.traduccion.push(this.tabs() + "print(" + temp + ",end=\"\"" + ");");
+                }
+            }
+            else if (this.tockenActual.token == TypeToken.STRING || this.tockenActual.token == TypeToken.INT || this.tockenActual.token == TypeToken.CHAR || this.tockenActual.token == TypeToken.BOOLEAN || this.tockenActual.token == TypeToken.FLOAT || this.tockenActual.token == TypeToken.DOUBLE) {
+                let temp = "";
+                for (let index = this.controlToken + 1; index < this.listaTokens.length; index++) {
+                    if (this.listaTokens[index + 1].token != TypeToken.PCOMA) {
+                        temp = temp + "" + this.listaTokens[index].lexema;
+                    } else {
+
+                        this.controlToken = index;
+                        break;
+                    }
+
+                }
+                this.traduccion.push(this.tabs() + "var " + temp);
+            }
             else if (this.tockenActual.token == TypeToken.PUBLIC || this.tockenActual.token == TypeToken.PRIVATE || this.tockenActual.token == TypeToken.PROTECTED) {
                 if (this.listaTokens[this.controlToken + 1].token == TypeToken.VOID || this.listaTokens[this.controlToken + 1].token == TypeToken.STRING || this.listaTokens[this.controlToken + 1].token == TypeToken.INT || this.listaTokens[this.controlToken + 1].token == TypeToken.CHAR || this.listaTokens[this.controlToken + 1].token == TypeToken.BOOLEAN || this.listaTokens[this.controlToken + 1].token == TypeToken.FLOAT || this.listaTokens[this.controlToken + 1].token == TypeToken.DOUBLE) {
                     let temp1 = "";
@@ -179,87 +272,22 @@ export class Traduccion {
 
                     }
                 }
-                /*
-                
-                                //for(int f=0;f>5*4;f++)
-                                //for(f;f>5*4;f++)
-                                if (this.listaTokens[this.controlToken + 2].token == TypeToken.ID) {
-                                    let temp = this.listaTokens[this.controlToken + 2].lexema;
-                                    if (condition) {
-                                        this.traduccion.push(this.tabs() + "for" + this.tockenActual.lexema + " in range(" + temp + "," + temp1 + "):");
-                                        this.tabulaciones++;
-                                    } else {
-                                        this.traduccion.push(this.tabs() + "for" + this.tockenActual.lexema + " in range(" + temp + "," + temp1 + "):");
-                                        this.tabulaciones++;
-                                    }
-                
-                                } else
-                                    if (this.listaTokens[this.controlToken + 2].token == TypeToken.STRING || this.listaTokens[this.controlToken + 2].token == TypeToken.INT || this.listaTokens[this.controlToken + 2].token == TypeToken.CHAR || this.listaTokens[this.controlToken + 2].token == TypeToken.BOOLEAN || this.listaTokens[this.controlToken + 2].token == TypeToken.FLOAT || this.listaTokens[this.controlToken + 2].token == TypeToken.DOUBLE) {
-                                        let temp = this.listaTokens[this.controlToken + 3].lexema;
-                                        let temp1 = this.listaTokens[this.controlToken + 5].lexema;
-                                        if (condition) {
-                
-                                        }
-                                        this.traduccion.push(this.tabs() + "for" + temp + "in range(" + temp1 + "," + temp2 + "):");
-                                        this.tabulaciones++;
-                                    }
-                */
 
             }
             else if (this.tockenActual.token == TypeToken.ID) {
                 let temp = this.tockenActual.lexema;
-                this.tockenActual = this.listaTokens[this.controlToken + 1];
-                if (this.tockenActual.token == TypeToken.ASIGNACION) {
-                    this.tockenActual = this.listaTokens[this.controlToken + 2];
-                    if (this.tockenActual.token == TypeToken.NUMERO) {
-                        let num = this.tockenActual.lexema;
-                        this.tockenActual = this.listaTokens[this.controlToken + 3];
-                        if (this.tockenActual.token == TypeToken.PUNTO) {
-                            this.tockenActual = this.listaTokens[this.controlToken + 4];
+                let temppp = "";
+                for (let index = this.controlToken + 1; index < this.listaTokens.length; index++) {
+                    if (this.listaTokens[index].token != TypeToken.PCOMA) {
+                        temppp = temppp + "" + this.listaTokens[index].lexema;
+                    } else {
 
-                            this.traduccion.push(this.tabs() + "" + temp + "=" + num + "." + this.tockenActual.lexema);
-
-
-
-                            this.controlToken += 3;
-                        }
-                        else {
-                            //Guardar asignacion en traduccion
-
-                            this.traduccion.push(this.tabs() + "" + temp + "=" + num);
-                            this.controlToken += 2;
-                        }
-
-                    } else if (this.tockenActual.token == TypeToken.COMILLASIMPLE || this.tockenActual.token == TypeToken.COMILLAS) {
-                        this.tockenActual = this.listaTokens[this.controlToken + 2];
-
-                        let tempp = this.tockenActual.lexema;
-
-                        this.tockenActual = this.listaTokens[this.controlToken + 3];
-                        //Guardar asignacion en traduccion
-
-                        this.traduccion.push(this.tabs() + "" + temp + "=" + tempp + this.tockenActual.lexema + tempp);
-
+                        this.controlToken = index;
+                        break;
                     }
-                    else {
-                        this.controlToken += 2;
-                        let dentro = "";
-                        for (let i = this.controlToken; i < this.listaTokens.length; i++) {
-                            this.tockenActual = this.listaTokens[i];
 
-                            if (this.tockenActual.token == TypeToken.PCOMA) {
-
-                                //traduccion[f] = tabs() + "print(" + dentro + ")";
-                                this.traduccion.push(this.tabs() + "" + temp + "=" + dentro);
-
-                                break;
-                            }
-                            dentro = dentro + this.tockenActual.lexema;
-                            this.controlToken = i;
-                        }
-
-                    }
                 }
+                this.traduccion.push(this.tabs() + "" + temp + temppp);
 
             }
             else if (this.tockenActual.token == TypeToken.LLAVEDER) {
