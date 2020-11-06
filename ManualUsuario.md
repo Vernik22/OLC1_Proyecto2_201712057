@@ -1,2 +1,6 @@
-# OLC1_Proyecto2_201712057
-hola mundo
+# MANUAL DE USUARIO
+
+va todo el texto aqui
+
+
+#Seccion1
