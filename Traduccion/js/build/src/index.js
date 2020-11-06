@@ -11,7 +11,7 @@ app.set('port', 3000);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 //Rutas
-app.get('/', routes_1.default);
+app.use('/traduccion', routes_1.default);
 app.listen(app.get('port'), () => {
     console.log('Server on port 3000');
 });
