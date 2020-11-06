@@ -55,8 +55,10 @@ func envioaPY(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf(r.FormValue("textarea0"))
 	r.ParseForm()
 	var texto = r.PostForm.Get("textarea0")
+
 	log.Println(texto)
 
+	//var url = "http://Py:3000/traduccion/recibir"
 	var url = "http://localhost:3000/traduccion/recibir"
 
 	requestBody, err := json.Marshal(map[string]string{
@@ -75,18 +77,17 @@ func envioaPY(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	log.Println(string(body))
+	log.Println(string(body) + "retorno del js")
 
-	/*
-		client := &http.Client{}
-		r, _ := http.NewRequest(http.MethodPost, url, strings.NewReader(data.Encode())) // URL-encoded payload
-		r.Header.Add("Authorization", "auth_token=\"XXXXXXX\"")
-		r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-		r.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
+}
 
-		resp, _ := client.Do(r)
-		fmt.Println(resp.Status)
-	*/
+func errPy(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf(r.FormValue("body"))
+	r.ParseForm()
+	var texto = r.PostForm.Get("body")
+
+	log.Println(texto)
+
 }
 
 func main() {
@@ -96,6 +97,7 @@ func main() {
 
 	//r.HandleFunc("/", index).Methods("GET")
 	r.HandleFunc("/texto", envioaPY).Methods("POST")
+	r.HandleFunc("/ErrPy", errPy).Methods("POST")
 
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("public"))))
 	log.Println("Escuchando en puerto8080...")
