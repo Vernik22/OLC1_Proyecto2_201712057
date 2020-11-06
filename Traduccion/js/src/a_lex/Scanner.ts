@@ -25,7 +25,9 @@ export class Scanner {
     getErrores():number[]{
         return this.pos_errores;
     }
-    
+    getLerrores():Error[]{
+        return this.lista_Errores;
+    }
     Analizar(entrada: String): Token[] {
 
         this.estadoA(entrada);
@@ -215,7 +217,7 @@ export class Scanner {
                 }
             } else {
                 this.lista_Errores.push(new Error(this.columna, this.fila, c));
-                this.pos_errores.push(posActual + 1);
+                this.pos_errores.push(posActual );
             }
             posActual += 1;
         }

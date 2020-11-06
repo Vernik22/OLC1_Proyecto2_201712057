@@ -1,11 +1,13 @@
 import { Router} from 'express';
 import * as manejo from './manejoText';
+import * as error from '../Analisis';
 
 const router:Router = Router();
 
-router.get('/', (req,res)=>{
-    res.send('HolaMundo desde Routes')
-})
+router.get('/Elex', error.Lelex);
+router.get('/Tokens', error.Ltokens);
+router.get('/Esin', error.Lesint);
+router.get('/Ctraducido', error.Ctraduc);
 
 router.post('/b', (req,res)=>{
 

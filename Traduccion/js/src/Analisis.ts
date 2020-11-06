@@ -3,25 +3,35 @@ import {Parser} from "./a_sint/SinJison/ParserPython";
 import {Correccion} from "./a_lex/CorreccionErrores";
 import {Traduccion} from "./a_sint/SinJison/Traduccion"
 import { Token } from "./a_lex/Token";
+import {Error} from "./a_lex/Token";
 import { Request, Response } from "express";
+
+let lerror:Error[];
+let ltok:Token[];
+let lersint:String[];
+let traduc:String;
 
 export function AnalizarJava(entrada:string):String{
 console.log('---------------------------Lexico*---------')
 const aLex  = new Scanner();
 let listaTokens = aLex.Analizar(entrada);
 let posiErrores= aLex.getErrores();
+lerror=aLex.getLerrores();
 if (posiErrores.length>0) {
+    const aLex1  = new Scanner();
     const corr = new Correccion();
-    corr.eliminarC(entrada,posiErrores);
-    let entradaN = corr.getCadenaFinal();
-    listaTokens = aLex.Analizar(entradaN);
+    let entradaN = corr.eliminarC(entrada,posiErrores);
+    listaTokens=[];
+    listaTokens = aLex1.Analizar(entradaN);
 }
+ltok=listaTokens;
 console.log(listaTokens);
 console.log('----------------------------Sintactico*-------')
 
 const aSint = new Parser(listaTokens);
 aSint.Analizar();
 let errores = aSint.getListaErrores();
+lersint=errores;
 console.log(errores);
 
 console.log('--------------------------Fin*---------')
@@ -29,26 +39,31 @@ if(errores.length==0){
     const trad = new Traduccion(listaTokens);
     trad.Trad();
     let codigo = trad.getCodigoTrad();
+    traduc=codigo;
     console.log('-------------------CODIGO TRAD*-------------------');
     console.log(codigo);
 }
-postErrores(listaTokens)
+
     return "exito"; 
 }
 
-export function postErrores(form:Token[]){
+export let Lelex=(req:Request, res: Response)=>{
     
-    let url= "http://localhost:8080/ErrPy";
-    //let url = "http://GoApp:8080/ErrPy";  
-    var request = require('Request');
-
-    request.post(
-       url,
-       { json: { key: 'para los errores PY' } },
-       function (error:any, response:any, body:any) {
-           if (!error && response.statusCode == 200) {
-               console.log(body)
-           }
-       }
-);
+    res.send(JSON.stringify( {Errores: lerror} ));
+    
+}
+export let Ltokens=(req:Request, res: Response)=>{
+    
+    res.send(JSON.stringify( {Tokens: ltok} ));
+    
+}
+export let Lesint=(req:Request, res: Response)=>{
+    
+    res.send(JSON.stringify( {Errores: lersint} ));
+    
+}
+export let Ctraduc=(req:Request, res: Response)=>{
+    
+    res.send(JSON.stringify( {Traduccion: traduc} ));
+    
 }

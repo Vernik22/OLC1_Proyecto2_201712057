@@ -7,7 +7,7 @@ export class Correccion{
         this.pos_car=[];
     }
 
-    eliminarC(cadena:String, posiciones:number[]){
+    eliminarC(cadena:String, posiciones:number[]):String{
        let recorrido = cadena;
         let posicionCar=0;
         if (posiciones.length!= 0){
@@ -31,7 +31,7 @@ export class Correccion{
         else{
             this.cadenaFinal=cadena;
         }
-            
+        return this.cadenaFinal; 
     }
 
     getCadenaFinal(){
