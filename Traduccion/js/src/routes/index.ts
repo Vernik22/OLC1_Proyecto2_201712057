@@ -4,7 +4,8 @@ import * as error from '../Analisis';
 
 const router:Router = Router();
 
-router.get('/Elex', error.Lelex);
+router.get('/tradPy', error.TradPy);
+
 router.get('/Tokens', error.Ltokens);
 router.get('/Esin', error.Lesint);
 router.get('/Ctraducido', error.Ctraduc);

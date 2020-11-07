@@ -22,6 +22,9 @@ class Scanner {
     getErrores() {
         return this.pos_errores;
     }
+    getLerrores() {
+        return this.lista_Errores;
+    }
     Analizar(entrada) {
         this.estadoA(entrada);
         return this.lista_Tokens;
@@ -236,7 +239,7 @@ class Scanner {
             }
             else {
                 this.lista_Errores.push(new Token_1.Error(this.columna, this.fila, c));
-                this.pos_errores.push(posActual + 1);
+                this.pos_errores.push(posActual);
             }
             posActual += 1;
         }

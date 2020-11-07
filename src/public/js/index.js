@@ -212,3 +212,21 @@ function traducir(){
     console.log(form);
   
 }
+
+//--------------------------------Obtener errores------------------------------
+
+async function ErroresLexicos(){
+    
+    let url = new URL("http://localhost:3000/traduccion/Elex");
+    //const params = {gender: "female", nat:"US"};
+    //Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+    const dataRequest = {
+       method: 'GET',
+       mode: 'cors',
+       cache: 'default'
+    };
+    let response = await fetch(url, dataRequest);
+      console.log(response)
+    let result = await response.json();
+      console.log(result)
+}

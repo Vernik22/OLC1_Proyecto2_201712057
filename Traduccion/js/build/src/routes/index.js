@@ -21,10 +21,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const manejo = __importStar(require("./manejoText"));
+const error = __importStar(require("../Analisis"));
 const router = express_1.Router();
-router.get('/', (req, res) => {
-    res.send('HolaMundo desde Routes');
-});
+router.get('/tradPy', error.TradPy);
+router.get('/Tokens', error.Ltokens);
+router.get('/Esin', error.Lesint);
+router.get('/Ctraducido', error.Ctraduc);
 router.post('/b', (req, res) => {
     res.send('Vernik GOD');
 });

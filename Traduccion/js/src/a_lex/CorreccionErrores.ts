@@ -13,13 +13,16 @@ export class Correccion{
         if (posiciones.length!= 0){
 
             while (posicionCar < recorrido.length){
+                let bandera=0;
                 for(let index=0; index<posiciones.length;index++) {
                     
                     if (posiciones[index]==posicionCar){
+                        bandera=1;
                         break;
                     }                
                       
-                    else{
+                    else if(bandera==0){
+                        bandera=1;
                         this.cadenaFinal+=recorrido[posicionCar];
                     }
                 }

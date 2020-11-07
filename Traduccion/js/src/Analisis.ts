@@ -47,9 +47,12 @@ if(errores.length==0){
     return "exito"; 
 }
 
-export let Lelex=(req:Request, res: Response)=>{
+export let TradPy=(req:Request, res: Response)=>{
     
-    res.send(JSON.stringify( {Errores: lerror} ));
+    res.send(JSON.stringify( {Errores: lerror,
+                              Tokens: ltok,
+                            ErroresSin:lersint,
+                            Traduccion:traduc  } ));
     
 }
 export let Ltokens=(req:Request, res: Response)=>{
