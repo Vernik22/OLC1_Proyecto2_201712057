@@ -19,8 +19,12 @@ export class Parser {
         this.pos = 0;
         this.listaRecorrido = new Nodo_Arbol("INICIO", "");
         this.quitarComentarios();
+        this.agregarUltimo();
     }
 
+    agregarUltimo(){
+        this.listaTokens.push(new Token(TypeToken.NINGUNO, ""));
+    }
     getRecorrido(): Nodo_Arbol {
         return this.listaRecorrido;
     }
