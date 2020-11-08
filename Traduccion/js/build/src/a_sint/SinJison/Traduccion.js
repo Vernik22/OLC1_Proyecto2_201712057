@@ -166,8 +166,16 @@ class Traduccion {
             else if (this.tockenActual.token == Token_2.TypeToken.STRING || this.tockenActual.token == Token_2.TypeToken.INT || this.tockenActual.token == Token_2.TypeToken.CHAR || this.tockenActual.token == Token_2.TypeToken.BOOLEAN || this.tockenActual.token == Token_2.TypeToken.FLOAT || this.tockenActual.token == Token_2.TypeToken.DOUBLE) {
                 let temp = "";
                 for (let index = this.controlToken + 1; index < this.listaTokens.length; index++) {
-                    if (this.listaTokens[index + 1].token != Token_2.TypeToken.PCOMA) {
-                        temp = temp + "" + this.listaTokens[index].lexema;
+                    this.tockenActual = this.listaTokens[index + 1];
+                    if (this.tockenActual.token != Token_2.TypeToken.PCOMA) {
+                        if (this.tockenActual.token != Token_2.TypeToken.LLAVEIZQ) {
+                            temp = temp + "" + this.listaTokens[index].lexema;
+                        }
+                        else {
+                            temp = temp + "" + this.listaTokens[index].lexema;
+                            this.controlToken = index;
+                            break;
+                        }
                     }
                     else {
                         this.controlToken = index;

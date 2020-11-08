@@ -167,7 +167,7 @@ function AbrirArchivo(files){
 }
 
 function DescargarArchivo(){
-    var ta=document.getElementById(get_vent());
+    var ta=document.getElementById("textarea0");
     var contenido=ta.value;//texto de vent actual
 
     //formato para guardar el archivo
@@ -249,7 +249,7 @@ async function Reportes(){
     var Table = document.getElementById("TablaErrores");
     Table.innerHTML = "";
     var graf = document.getElementById("grafica");
-    Table.innerHTML = ""; 
+    graf.innerHTML = ""; 
     ErroresLex = JSON.parse(JSON.stringify(result.Errores));
     ErroresSin = JSON.parse(JSON.stringify(result.ErroresSin));
     Tokens = JSON.parse(JSON.stringify(result.Tokens));
@@ -267,9 +267,19 @@ async function Reportes(){
     '<td align="center" style="dislay: none;">' + ErroresLex[i].columna + '</td>'+
     '<td align="center" style="dislay: none;">' + ErroresLex[i].lexema+" no pertenece al lenguaje" + '</td>'+'</tr>');
     }
+
+    for (i = 0; i < ErroresSin.length; i++){
+
+        $("#TablaErrores").append('<tr>' + 
+        '<td align="center" style="dislay: none;">' +(i+1) + '</td>'+
+        '<td align="center" style="dislay: none;">' + "Sintactico" + '</td>'+
+        '<td align="center" style="dislay: none;">' + "Fila" + '</td>'+
+        '<td align="center" style="dislay: none;">' + "Columna" + '</td>'+
+        '<td align="center" style="dislay: none;">' + ErroresSin[i]+ '</td>'+'</tr>');
+        }
 //-------------------------------------------------------------------------------------------------
-    var Table = document.getElementById("TablaTokens");
-    Table.innerHTML = "";       
+    var Tok = document.getElementById("TablaTokens");
+    Tok.innerHTML = "";       
     $("#TablaTokens").append('<tr><td>No.</td>'+
     '<td>Fila</td>' +
     '<td>Columna</td>' +
@@ -286,12 +296,58 @@ async function Reportes(){
     }
 
   //------------------------------------------------------------------------------------
-  var Table = document.getElementById("TablaTokens");
-  Table.innerHTML = ""; 
+ 
   console.log("grafica")
   d3.select("#grafica").graphviz()
-  .width(500)
-  .height(900)
+  .width(2000)
+  .height(2100)
   .fit(true)
   .renderDot("digraph  G{"+result.Grafo+"}");  
+}
+
+async function GuardarPy(){
+    let url1 = new URL("http://localhost:8080/TradPy");
+    //const params = {gender: "female", nat:"US"};
+    //Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+    const dataRequest = {
+       method: 'GET',
+       mode: 'cors',
+       cache: 'default'
+    };
+    let response = await fetch(url1, dataRequest);
+      console.log(response)
+    let result = await response.json();
+    //var ta=document.getElementById("textarea0");
+    var contenido=result.Traduccion;//texto de vent actual
+
+    //formato para guardar el archivo
+    var hoy=new Date();
+    var dd=hoy.getDate();
+    var mm=hoy.getMonth()+1;
+    var yyyy=hoy.getFullYear();
+    var HH=hoy.getHours();
+    var MM=hoy.getMinutes();
+    var formato=get_vent().replace("textarea","")+"_"+dd+"_"+mm+"_"+yyyy+"_"+HH+"_"+MM;
+
+    var nombre="Traduccion"+formato+".py";//nombre del archivo
+    var file=new Blob([contenido], {type: 'text/plain'});
+
+    if(window.navigator.msSaveOrOpenBlob){
+        window.navigator.msSaveOrOpenBlob(file, nombre);
+    }else{
+        var a=document.createElement("a"),url=URL.createObjectURL(file);
+        a.href=url;
+        a.download=nombre;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        },0); 
+    }
+}
+
+function GuardarJs(){
+
+
 }

@@ -20,8 +20,14 @@ class Parser {
             return;
         }
         if (this.preAnalisis == terminal) {
-            let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol(this.listaTokens[this.pos].lexema, "");
-            nodoArriba.agregarHijo(IMPORTBIGIN);
+            if (this.preAnalisis == Token_1.TypeToken.COMILLASIMPLE || this.preAnalisis == Token_1.TypeToken.COMILLAS) {
+                let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("comillas", "");
+                nodoArriba.agregarHijo(IMPORTBIGIN);
+            }
+            else {
+                let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol(this.listaTokens[this.pos].lexema, "");
+                nodoArriba.agregarHijo(IMPORTBIGIN);
+            }
             console.log("token correcto; " + this.listaTokens[this.pos].token);
             this.pos++;
             if (this.pos < this.listaTokens.length) {
@@ -342,12 +348,21 @@ class Parser {
             this.METODOSP(IMPORTBIGIN);
         }
         else if (this.preAnalisis == Token_1.TypeToken.STRING || this.preAnalisis == Token_1.TypeToken.INT || this.preAnalisis == Token_1.TypeToken.CHAR || this.preAnalisis == Token_1.TypeToken.BOOLEAN || this.preAnalisis == Token_1.TypeToken.FLOAT || this.preAnalisis == Token_1.TypeToken.DOUBLE) {
-            let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("DECLARACION", "");
+            /*let IMPORTBIGIN = new Nodo_Arbol("DECLARACION", "")
             nodoArriba.agregarHijo(IMPORTBIGIN);
             this.DECLARACION(IMPORTBIGIN);
-            IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("METODOS", "");
+            IMPORTBIGIN = new Nodo_Arbol("METODOS", "")
             nodoArriba.agregarHijo(IMPORTBIGIN);
-            this.METODOS(IMPORTBIGIN);
+            this.METODOS(IMPORTBIGIN);*/
+            let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("TIPO", "");
+            nodoArriba.agregarHijo(IMPORTBIGIN);
+            this.TIPO(IMPORTBIGIN);
+            IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("ID", "");
+            nodoArriba.agregarHijo(IMPORTBIGIN);
+            this.emparejar(Token_1.TypeToken.ID, IMPORTBIGIN);
+            IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("METODOSP", "");
+            nodoArriba.agregarHijo(IMPORTBIGIN);
+            this.METODOSP(IMPORTBIGIN);
         }
         else {
             //epsilon
@@ -669,7 +684,15 @@ class Parser {
             nodoArriba.agregarHijo(IMPORTBIGIN);
             this.RETURNCUE(IMPORTBIGIN);
         }
-        else if (this.preAnalisis == Token_1.TypeToken.NUMERO || this.preAnalisis == Token_1.TypeToken.MAS || this.preAnalisis == Token_1.TypeToken.GUION) {
+        else if (this.preAnalisis == Token_1.TypeToken.PARENTESISIZQ) {
+            let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("E", "");
+            nodoArriba.agregarHijo(IMPORTBIGIN);
+            this.E(IMPORTBIGIN);
+            IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("RETURNCUE", "");
+            nodoArriba.agregarHijo(IMPORTBIGIN);
+            this.RETURNCUE(IMPORTBIGIN);
+        }
+        else if (this.preAnalisis == Token_1.TypeToken.NUMERO || this.preAnalisis == Token_1.TypeToken.MAS || this.preAnalisis == Token_1.TypeToken.GUION || this.preAnalisis == Token_1.TypeToken.ASTERISCO || this.preAnalisis == Token_1.TypeToken.DIAGONAL) {
             let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("E", "");
             nodoArriba.agregarHijo(IMPORTBIGIN);
             this.E(IMPORTBIGIN);
@@ -1102,6 +1125,14 @@ class Parser {
             nodoArriba.agregarHijo(IMPORTBIGIN);
             this.E(IMPORTBIGIN);
         }
+        else if (this.preAnalisis == Token_1.TypeToken.COMA) {
+            let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("ID", "");
+            nodoArriba.agregarHijo(IMPORTBIGIN);
+            this.emparejar(Token_1.TypeToken.COMA, IMPORTBIGIN);
+            IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("E", "");
+            nodoArriba.agregarHijo(IMPORTBIGIN);
+            this.E(IMPORTBIGIN);
+        }
         else if (this.preAnalisis == Token_1.TypeToken.COMILLAS || this.preAnalisis == Token_1.TypeToken.COMILLASIMPLE) {
             if (this.preAnalisis == Token_1.TypeToken.COMILLAS) {
                 let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("Comillas", "");
@@ -1296,6 +1327,11 @@ class Parser {
             IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("ASIGNACION", "");
             nodoArriba.agregarHijo(IMPORTBIGIN);
             this.ASIGNACION(IMPORTBIGIN);
+        }
+        else if (this.preAnalisis == Token_1.TypeToken.PARENTESISIZQ) {
+            let IMPORTBIGIN = new nodoArbol_1.Nodo_Arbol("ID", "");
+            nodoArriba.agregarHijo(IMPORTBIGIN);
+            this.METODOSP(IMPORTBIGIN);
         }
         //else if (this.preAnalisis==TypeToken.PCOMA) {
         //   this.emparejar(TypeToken.PCOMA);

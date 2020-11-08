@@ -167,8 +167,16 @@ export class Traduccion {
             else if (this.tockenActual.token == TypeToken.STRING || this.tockenActual.token == TypeToken.INT || this.tockenActual.token == TypeToken.CHAR || this.tockenActual.token == TypeToken.BOOLEAN || this.tockenActual.token == TypeToken.FLOAT || this.tockenActual.token == TypeToken.DOUBLE) {
                 let temp = "";
                 for (let index = this.controlToken + 1; index < this.listaTokens.length; index++) {
-                    if (this.listaTokens[index + 1].token != TypeToken.PCOMA) {
-                        temp = temp + "" + this.listaTokens[index].lexema;
+                    this.tockenActual = this.listaTokens[index+ 1];
+                    if (this.tockenActual.token != TypeToken.PCOMA) {
+                        if (this.tockenActual.token != TypeToken.LLAVEIZQ) {
+                            temp = temp + "" + this.listaTokens[index].lexema;
+                        }else {
+                            temp = temp + "" + this.listaTokens[index].lexema;
+                            this.controlToken = index;
+                            break;
+                        }
+                        
                     } else {
 
                         this.controlToken = index;
