@@ -93,9 +93,9 @@ export enum TypeToken{
 export class Token{
 
     token: TypeToken;
-    lexema: String;
+    lexema: string;
 
-    constructor(token:TypeToken, lexema:String){
+    constructor(token:TypeToken, lexema:string){
         this.token = token;
         this.lexema = lexema;
     }
@@ -104,7 +104,7 @@ export class Token{
 export class Error{
     columna:number;
     fila:number;
-    lexema: String;
+    lexema: string;
 
     constructor(columna:number, fila:number, lexema:String){
         this.columna =columna;

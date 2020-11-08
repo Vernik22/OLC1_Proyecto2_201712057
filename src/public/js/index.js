@@ -201,7 +201,7 @@ function DescargarArchivo(){
 
 
 function traducir(){
-    const myForm=document.getElementById('myForm');
+    
     console.log("traducir");
 
     var form = new FormData(document.getElementById('myForm'));
@@ -210,14 +210,15 @@ function traducir(){
         body: form
     });
     console.log(form);
-  
+    Reportes();
+    console.log("paso");
 }
 
 //--------------------------------Obtener errores------------------------------
 
-async function ErroresLexicos(){
-    
-    let url = new URL("http://localhost:3000/traduccion/Elex");
+async function Reportes(){
+    console.log("Reportes");
+    let url = new URL("http://localhost:8080/TradPy");
     //const params = {gender: "female", nat:"US"};
     //Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     const dataRequest = {
@@ -229,4 +230,68 @@ async function ErroresLexicos(){
       console.log(response)
     let result = await response.json();
       console.log(result)
+      var ErroresLex = JSON.stringify(result.Errores);
+      var ErroresSin = JSON.stringify(result.ErroresSin);
+      var Tokens = JSON.stringify(result.Tokens);
+      var Trad = JSON.stringify(result.Traduccion);
+      var Grafo =JSON.stringify(result.Grafo);
+      document.getElementById("conPT").value+="------------------------Erores Lexicos-------------------------\n";
+      document.getElementById("conPT").value+=ErroresLex+"\n";
+      document.getElementById("conPT").value+="----------------------Erores Sintacticos-----------------------\n";
+      document.getElementById("conPT").value+=ErroresSin+"\n";
+      document.getElementById("conPT").value+="-----------------------------Tokens---------------------------\n";
+      document.getElementById("conPT").value+=Tokens+"\n";
+      document.getElementById("conPT").value+="--------------------------Traduccion-------------------------\n";
+      document.getElementById("conPT").value+=result.Traduccion+"\n";
+
+
+//----------------------------------Ingresar a tablas ----------------------------------------------------------------
+    var Table = document.getElementById("TablaErrores");
+    Table.innerHTML = "";
+    var graf = document.getElementById("grafica");
+    Table.innerHTML = ""; 
+    ErroresLex = JSON.parse(JSON.stringify(result.Errores));
+    ErroresSin = JSON.parse(JSON.stringify(result.ErroresSin));
+    Tokens = JSON.parse(JSON.stringify(result.Tokens));
+    $("#TablaErrores").append('<tr><td>No.</td>'+
+    '<td>Tipo</td>' + 
+    '<td>Fila</td>' +
+    '<td>Columna</td>' +
+    '<td>Descripcion</td>');
+    for (i = 0; i < ErroresLex.length; i++){
+
+    $("#TablaErrores").append('<tr>' + 
+    '<td align="center" style="dislay: none;">' +(i+1) + '</td>'+
+    '<td align="center" style="dislay: none;">' + "Léxico" + '</td>'+
+    '<td align="center" style="dislay: none;">' + ErroresLex[i].fila + '</td>'+
+    '<td align="center" style="dislay: none;">' + ErroresLex[i].columna + '</td>'+
+    '<td align="center" style="dislay: none;">' + ErroresLex[i].lexema+" no pertenece al lenguaje" + '</td>'+'</tr>');
+    }
+//-------------------------------------------------------------------------------------------------
+    var Table = document.getElementById("TablaTokens");
+    Table.innerHTML = "";       
+    $("#TablaTokens").append('<tr><td>No.</td>'+
+    '<td>Fila</td>' +
+    '<td>Columna</td>' +
+    '<td>Tipo</td>' + 
+    '<td>Descripcion</td>');
+    for (i = 0; i < Tokens.length; i++){
+
+    $("#TablaTokens").append('<tr>' + 
+    '<td align="center" style="dislay: none;">' +(i+1) + '</td>'+
+    '<td align="center" style="dislay: none;">' + "Fila" + '</td>'+
+    '<td align="center" style="dislay: none;">' + "Columna" + '</td>'+
+    '<td align="center" style="dislay: none;">' + Tokens[i].token + '</td>'+
+    '<td align="center" style="dislay: none;">' + Tokens[i].lexema + '</td>'+'</tr>');
+    }
+
+  //------------------------------------------------------------------------------------
+  var Table = document.getElementById("TablaTokens");
+  Table.innerHTML = ""; 
+  console.log("grafica")
+  d3.select("#grafica").graphviz()
+  .width(500)
+  .height(900)
+  .fit(true)
+  .renderDot("digraph  G{"+result.Grafo+"}");  
 }

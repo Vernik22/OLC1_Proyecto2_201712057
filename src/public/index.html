@@ -10,6 +10,9 @@
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <script src="./codemirror/lib/codemirror.js"></script>
+    <script src="//d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+    <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
     <link rel="stylesheet" href="./codemirror//lib//codemirror.css">
     <link rel="stylesheet" href="./codemirror//theme//eclipse.css">
     <script src="./codemirror/mode/clike/clike.js"></script>
@@ -27,7 +30,7 @@
         <button onclick="agregar();" title="AgregarPestana" id="btn4" class="btn btn-secondary">Agregar Pestana</button>
         <button onclick="quitar();" title="QuitarPestana" id="btn5" class="btn btn-secondary">Quitar Pestana</button>
         <button onclick="traducir();" title="Traducir" class="btn btn-light">Traducir</button>
-        <button onclick="ErroresLexicos();" title="ErroresLexicos class="btn btn-light">Errores Lexicos</button>
+        <button onclick="ErroresLexicos();" title="ErroresLexicos class=" btn btn-light">Errores Lexicos</button>
 
         <div id="pestanas">
             <ul id=lista>
@@ -39,7 +42,7 @@
     <div id="contenidopestanas">
         <div id="textForm">
             <form class="form" id="myForm">
-               <!-- <input type="button" onclick="traducir()" value="Traducir" title="Traducir" class="btn btn-light">-->
+                <!-- <input type="button" onclick="traducir()" value="Traducir" title="Traducir" class="btn btn-light">-->
                 <textarea name="textarea0" id="textarea0" style="width:900px; height:500px"></textarea>
             </form>
         </div>
@@ -48,14 +51,23 @@
 
             <div class="consolaJS">
                 <h4>Consola JavaScript</h4>
-                <textarea id="conJS" style="width:600px; height:250px">
-                    </textarea>
+                <textarea id="conJS" style="width:600px; height:250px; background-color: black; color:azure"></textarea>
             </div>
             <div class="consolaPT">
                 <h4>Consola Python</h4>
-                <textarea id="conPT" style="width:600px; height:250px">
-                    </textarea>
+                <textarea id="conPT" style="width:600px; height:250px; background-color: black; color:azure"></textarea>
             </div>
+
+        </div>
+        <div id="ReporteErrores">
+
+            <table id="TablaErrores" class="table table-dark"></table>
+        </div>
+        <div id="ListaTokens">
+
+            <table id="TablaTokens" class="table table-dark"></table>
+        </div>
+        <div id="grafica" style="text-align: center; border: 1px solid black">
 
         </div>
 

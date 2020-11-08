@@ -5,11 +5,14 @@ import {Traduccion} from "./a_sint/SinJison/Traduccion"
 import { Token } from "./a_lex/Token";
 import {Error} from "./a_lex/Token";
 import { Request, Response } from "express";
+import { Nodo_Arbol } from "./Gramatica/nodoArbol";
+import { RecorridoA } from "./Gramatica/recorridoArbol";
 
 let lerror:Error[];
 let ltok:Token[];
 let lersint:String[];
 let traduc:String;
+let grafo:String;
 
 export function AnalizarJava(entrada:string):String{
 console.log('---------------------------Lexico*---------')
@@ -33,6 +36,10 @@ aSint.Analizar();
 let errores = aSint.getListaErrores();
 lersint=errores;
 console.log(errores);
+let recorrido=aSint.getRecorrido();
+const rec = new RecorridoA()
+rec.recorrerArbol(recorrido);
+grafo=rec.getConcatenar();
 
 console.log('--------------------------Fin*---------')
 if(errores.length==0){
@@ -40,6 +47,7 @@ if(errores.length==0){
     trad.Trad();
     let codigo = trad.getCodigoTrad();
     traduc=codigo;
+
     console.log('-------------------CODIGO TRAD*-------------------');
     console.log(codigo);
 }
@@ -52,7 +60,8 @@ export let TradPy=(req:Request, res: Response)=>{
     res.send(JSON.stringify( {Errores: lerror,
                               Tokens: ltok,
                             ErroresSin:lersint,
-                            Traduccion:traduc  } ));
+                            Traduccion:traduc,
+                            Grafo:grafo } ));
     
 }
 export let Ltokens=(req:Request, res: Response)=>{
