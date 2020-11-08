@@ -10,7 +10,7 @@ export class Scanner {
     pos: number;
 
     cadena: String;
-    lexema: String;
+    lexema: string;
 
     constructor() {
         this.lista_Tokens = [];

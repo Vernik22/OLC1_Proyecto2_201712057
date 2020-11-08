@@ -5,10 +5,12 @@ const Scanner_1 = require("./a_lex/Scanner");
 const ParserPython_1 = require("./a_sint/SinJison/ParserPython");
 const CorreccionErrores_1 = require("./a_lex/CorreccionErrores");
 const Traduccion_1 = require("./a_sint/SinJison/Traduccion");
+const recorridoArbol_1 = require("./Gramatica/recorridoArbol");
 let lerror;
 let ltok;
 let lersint;
 let traduc;
+let grafo;
 function AnalizarJava(entrada) {
     console.log('---------------------------Lexico*---------');
     const aLex = new Scanner_1.Scanner();
@@ -30,6 +32,10 @@ function AnalizarJava(entrada) {
     let errores = aSint.getListaErrores();
     lersint = errores;
     console.log(errores);
+    let recorrido = aSint.getRecorrido();
+    const rec = new recorridoArbol_1.RecorridoA();
+    rec.recorrerArbol(recorrido);
+    grafo = rec.getConcatenar();
     console.log('--------------------------Fin*---------');
     if (errores.length == 0) {
         const trad = new Traduccion_1.Traduccion(listaTokens);
@@ -46,7 +52,8 @@ exports.TradPy = (req, res) => {
     res.send(JSON.stringify({ Errores: lerror,
         Tokens: ltok,
         ErroresSin: lersint,
-        Traduccion: traduc }));
+        Traduccion: traduc,
+        Grafo: grafo }));
 };
 exports.Ltokens = (req, res) => {
     res.send(JSON.stringify({ Tokens: ltok }));

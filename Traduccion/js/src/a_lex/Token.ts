@@ -106,7 +106,7 @@ export class Error{
     fila:number;
     lexema: string;
 
-    constructor(columna:number, fila:number, lexema:String){
+    constructor(columna:number, fila:number, lexema:string){
         this.columna =columna;
         this.fila= fila;
         this.lexema= lexema;
