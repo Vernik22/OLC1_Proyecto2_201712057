@@ -27,6 +27,7 @@ Para el front-end tenemos las siguientes funcionalidades :
   - Boton quitar pestaña
   - Area de texto
   - Consolas de salida
+  - Grafo de analisis sintactico
 
 ### Botón seleccionar
 Con el boton seleccionar archivo podremos buscar un archivo en nuestro computador, y la interfaz lo abrira y mostrara en el area de texto para modificar o traducir seguin sea el caso.
@@ -52,3 +53,8 @@ En estas consolas se visualizaran todos los errores que el codigo tenga, en esta
 ### Reporte de errores
 Para los reportes de errores se generaran unas tablas en las cuales se visualizaran los errores lexicos que el condigo mandado a nalizar tenga. 
 Luego podremos visualizar los errores sintacticos en caso hubiera y por ultimo podremos visualizar el arbol de analisis sintactico en forma de imagen.
+
+### Grafo de analisis sintactico
+Para la visualizacion del analisis sintactico se crea un arbol de nalisis sintactico con todas las funciones y producciones de la gramatica, el cual podremos mover y hacer un zoom para poder interactuar con el mismo y visualizarlo de mejor manera.
+
+![D](./imagenes/Grafo.png)
