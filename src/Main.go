@@ -61,7 +61,7 @@ func envioaPY(w http.ResponseWriter, r *http.Request) {
 	log.Println(texto)
 
 	//var url = "http://Py:3000/traduccion/recibir"
-	var url = "http://localhost:3000/traduccion/recibir"
+	var url = "http://localhost:5000/traduccion/recibir"
 
 	requestBody, err := json.Marshal(map[string]string{
 		"Nombre": texto,

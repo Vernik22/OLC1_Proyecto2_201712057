@@ -10,7 +10,7 @@ router.get('/Tokens', error.Ltokens);
 router.get('/Esin', error.Lesint);
 router.get('/Ctraducido', error.Ctraduc);
 
-router.post('/b', (req,res)=>{
+router.get('/b', (req,res)=>{
 
     res.send('Vernik GOD')
 })
