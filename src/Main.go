@@ -61,6 +61,35 @@ func envioaPY(w http.ResponseWriter, r *http.Request) {
 	log.Println(texto)
 
 	//var url = "http://Py:3000/traduccion/recibir"
+	var url = "http://localhost:3000/traduccion/recibir"
+
+	requestBody, err := json.Marshal(map[string]string{
+		"Nombre": texto,
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(requestBody))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(string(body))
+
+}
+func envioaJs(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf(r.FormValue("textarea0"))
+	r.ParseForm()
+	var texto = r.PostForm.Get("textarea0")
+
+	log.Println(texto)
+
+	//var url = "http://Js:3000/traduccion/recibir"
 	var url = "http://localhost:5000/traduccion/recibir"
 
 	requestBody, err := json.Marshal(map[string]string{
@@ -82,10 +111,39 @@ func envioaPY(w http.ResponseWriter, r *http.Request) {
 	log.Println(string(body))
 
 }
-
 func errPy(w http.ResponseWriter, r *http.Request) {
 	//var url = "http://Py:3000/traduccion/tradPy"
 	var url = "http://localhost:3000/traduccion/tradPy"
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(string(body))
+	fmt.Fprintf(w, string(body))
+
+	bytes := []byte(body)
+
+	var colores map[string]interface{}
+	//m := colores.()
+
+	if err := json.Unmarshal(bytes, &colores); err != nil {
+		panic(err)
+	}
+	fmt.Println(colores)
+	entries := strings.Split(string(body), "token")
+	fmt.Println(entries[0])
+
+}
+
+func errJs(w http.ResponseWriter, r *http.Request) {
+	//var url = "http://Js:5000/traduccion/tradJs"
+	var url = "http://localhost:5000/traduccion/tradJs"
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -174,7 +232,9 @@ func main() {
 
 	//r.HandleFunc("/", index).Methods("GET")
 	r.HandleFunc("/texto", envioaPY).Methods("POST")
+	r.HandleFunc("/textoj", envioaJs).Methods("POST")
 	r.HandleFunc("/TradPy", errPy)
+	r.HandleFunc("/TradJs", errJs)
 
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("public"))))
 	log.Println("Escuchando en puerto8080...")

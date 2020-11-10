@@ -209,8 +209,14 @@ function traducir(){
         method: "POST",
         body: form
     });
+    var form = new FormData(document.getElementById('myForm'));
+    fetch("../textoj", {
+        method: "POST",
+        body: form
+    });
     console.log(form);
     Reportes();
+    ReportesJs();
     console.log("paso");
 }
 
@@ -303,6 +309,53 @@ async function Reportes(){
   .height(2100)
   .fit(true)
   .renderDot("digraph  G{"+result.Grafo+"}");  
+
+  d3.select("#GrafJs").graphviz()
+  .width(2000)
+  .height(2100)
+  .fit(true)
+  .renderDot("digraph  G{"+result.Grafo+"}");  
+
+}
+
+async function ReportesJs(){
+    console.log("ReportesJS");
+    let url = new URL("http://localhost:8080/TradJs");
+    //const params = {gender: "female", nat:"US"};
+    //Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+    const dataRequest = {
+       method: 'GET',
+       mode: 'cors',
+       cache: 'default'
+    };
+    let response = await fetch(url, dataRequest);
+      console.log(response)
+    let result = await response.json();
+      console.log(result)
+      var ErroresLex = JSON.stringify(result.Errores);
+      var ErroresSin = JSON.stringify(result.ErroresSin);
+      var Tokens = JSON.stringify(result.Tokens);
+      var Trad = JSON.stringify(result.Traduccion);
+      var Grafo =JSON.stringify(result.Grafo);
+      document.getElementById("conJS").value+="------------------------Erores Lexicos-------------------------\n";
+      document.getElementById("conJS").value+=ErroresLex+"\n";
+      document.getElementById("conJS").value+="----------------------Erores Sintacticos-----------------------\n";
+      document.getElementById("conJS").value+=ErroresSin+"\n";
+      document.getElementById("conJS").value+="-----------------------------Tokens---------------------------\n";
+      document.getElementById("conJS").value+=Tokens+"\n";
+      document.getElementById("conJS").value+="--------------------------Traduccion-------------------------\n";
+      document.getElementById("conJS").value+=result.Traduccion+"\n";
+      //result.Traduccion
+
+ 
+  console.log("grafica")
+  /*
+  d3.select("#GrafJs").graphviz()
+  .width(2000)
+  .height(2100)
+  .fit(true)
+  .renderDot("digraph  G{"+result.Grafo+"}");  
+*/
 }
 
 async function GuardarPy(){
