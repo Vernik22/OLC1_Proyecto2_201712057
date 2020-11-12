@@ -1,6 +1,6 @@
 
 %{
-    const Nodo_Arbol= require('../Gramatica/nodoArbol.ts');
+    const Nodo_Arbol= require('../Gramatica/nodoArbol');
     var self=this;
    
     var Comillas='\''
@@ -20,48 +20,48 @@
 %%
 
 \s+         /*Omitir espacios en blanco*/
-"continue"  %{self.listaTokens.push("continue");return 'tk_continue'; %}
-"break"     %{self.listaTokens.push("break"); return 'tk_break'; %}
-"return"    %{self.listaTokens.push("return"); return 'tk_return'; %}
-"if"        %{self.listaTokens.push("if"); return 'tk_if'; %}
-"else"      %{self.listaTokens.push("else"); return 'tk_else'; %}
-"for"       %{self.listaTokens.push("for");return 'tk_for'; %}
-"while"     %{self.listaTokens.push("while");return 'tk_while'; %}
-"do"        %{self.listaTokens.push("do");return 'tk_do'; %}
-"class"     %{self.listaTokens.push("class");return 'tk_class'; %}
-"null"      %{self.listaTokens.push("null");return 'tk_null'; %}
-"delete"    %{self.listaTokens.push("delete");return 'tk_delete'; %}
-"true"      %{self.listaTokens.push("true");return 'tk_true'; %}
-"false"     %{self.listaTokens.push("false");return 'tk_false'; %}
-"new"       %{self.listaTokens.push("new");return 'tk_new'; %}
-"void"      %{self.listaTokens.push("void");return 'tk_void'; %}
-"const"     %{self.listaTokens.push("const");return 'tk_const'; %}
-"case"      %{self.listaTokens.push("case");return 'tk_case'; %}
-"catch"     %{self.listaTokens.push("catch");return 'tk_catch'; %}
-"try"       %{self.listaTokens.push("try");return 'tk_try'; %}
-"import"    %{self.listaTokens.push("import");return 'tk_import'; %}
-"extends"   %{self.listaTokens.push("extends");return 'tk_extends'; %}
-"export"    %{self.listaTokens.push("export");return 'tk_export'; %}
-"finally"   %{self.listaTokens.push("finally");return 'tk_finally'; %}
-"switch"    %{self.listaTokens.push("switch");return 'tk_switch'; %}
-"this"      %{self.listaTokens.push("this");return 'tk_this'; %}
-"throw"     %{self.listaTokens.push("throw");return 'tk_throw'; %}
-"static"    %{self.listaTokens.push("static");return 'tk_static'; %}
-"private"   %{self.listaTokens.push("private");return 'tk_private'; %}
-"public"    %{self.listaTokens.push("public");return 'tk_public'; %}    
-"protected" %{self.listaTokens.push("protected");return 'tk_protected'; %}
-"interface" %{self.listaTokens.push("interface");return 'tk_interface'; %}
-"int"       %{self.listaTokens.push("int");return 'tk_int'; %}
-"String"    %{self.listaTokens.push("string");return 'tk_string'; %}
-"boolean"   %{self.listaTokens.push("boolean");return 'tk_boolean'; %}
-"float"     %{self.listaTokens.push("float");return 'tk_float'; %}
-"char"      %{self.listaTokens.push("char");return 'tk_char'; %}
-"double"    %{self.listaTokens.push("double");return 'tk_double'; %}
-"System"    %{self.listaTokens.push("System");return 'tk_system'; %}
-"out"       %{self.listaTokens.push("out");return 'tk_out'; %}
-"println"   %{self.listaTokens.push("println");return 'tk_println'; %}
-"print"     %{self.listaTokens.push("print");return 'tk_print'; %}
-"package"   %{self.listaTokens.push("package");return 'tk_package'; %}
+"continue"  %{self.listaTokens.push("continue,"+"continue");return 'tk_continue'; %}
+"break"     %{self.listaTokens.push("break,"+"break"); return 'tk_break'; %}
+"return"    %{self.listaTokens.push("return,"+"return"); return 'tk_return'; %}
+"if"        %{self.listaTokens.push("if,"+"if"); return 'tk_if'; %}
+"else"      %{self.listaTokens.push("else,"+"else"); return 'tk_else'; %}
+"for"       %{self.listaTokens.push("for,"+"for");return 'tk_for'; %}
+"while"     %{self.listaTokens.push("while,"+"while");return 'tk_while'; %}
+"do"        %{self.listaTokens.push("do,"+"do");return 'tk_do'; %}
+"class"     %{self.listaTokens.push("class,"+"class");return 'tk_class'; %}
+"null"      %{self.listaTokens.push("null,"+"null");return 'tk_null'; %}
+"delete"    %{self.listaTokens.push("delete,"+"delete");return 'tk_delete'; %}
+"true"      %{self.listaTokens.push("true,"+"true");return 'tk_true'; %}
+"false"     %{self.listaTokens.push("false,"+"false");return 'tk_false'; %}
+"new"       %{self.listaTokens.push("new,"+"new");return 'tk_new'; %}
+"void"      %{self.listaTokens.push("void,"+"void");return 'tk_void'; %}
+"const"     %{self.listaTokens.push("const,"+"const");return 'tk_const'; %}
+"case"      %{self.listaTokens.push("case,"+"case");return 'tk_case'; %}
+"catch"     %{self.listaTokens.push("catch,"+"catch");return 'tk_catch'; %}
+"try"       %{self.listaTokens.push("try,"+"try");return 'tk_try'; %}
+"import"    %{self.listaTokens.push("import,"+"import");return 'tk_import'; %}
+"extends"   %{self.listaTokens.push("extends,"+"extends");return 'tk_extends'; %}
+"export"    %{self.listaTokens.push("export,"+"export");return 'tk_export'; %}
+"finally"   %{self.listaTokens.push("finally,"+"finally");return 'tk_finally'; %}
+"switch"    %{self.listaTokens.push("switch,"+"switch");return 'tk_switch'; %}
+"this"      %{self.listaTokens.push("this,"+"this");return 'tk_this'; %}
+"throw"     %{self.listaTokens.push("throw,"+"throw");return 'tk_throw'; %}
+"static"    %{self.listaTokens.push("static,"+"static");return 'tk_static'; %}
+"private"   %{self.listaTokens.push("private,"+"private");return 'tk_private'; %}
+"public"    %{self.listaTokens.push("public,"+"public");return 'tk_public'; %}    
+"protected" %{self.listaTokens.push("protected,"+"protected");return 'tk_protected'; %}
+"interface" %{self.listaTokens.push("interface,"+"interface");return 'tk_interface'; %}
+"int"       %{self.listaTokens.push("int,"+"int");return 'tk_int'; %}
+"String"    %{self.listaTokens.push("string,"+"string");return 'tk_string'; %}
+"boolean"   %{self.listaTokens.push("boolean,"+"boolean");return 'tk_boolean'; %}
+"float"     %{self.listaTokens.push("float,"+"float");return 'tk_float'; %}
+"char"      %{self.listaTokens.push("char,"+"char");return 'tk_char'; %}
+"double"    %{self.listaTokens.push("double,"+"double");return 'tk_double'; %}
+"System"    %{self.listaTokens.push("System,"+"System");return 'tk_system'; %}
+"out"       %{self.listaTokens.push("out,"+"out");return 'tk_out'; %}
+"println"   %{self.listaTokens.push("println,"+"println");return 'tk_println'; %}
+"print"     %{self.listaTokens.push("print,"+"print");return 'tk_print'; %}
+"package"   %{self.listaTokens.push("package,"+"package");return 'tk_package'; %}
 "{"         %{self.listaTokens.push("LlaveIzq,"+yytext );return 'tk_llaveIzq'; %}
 "}"         %{self.listaTokens.push("LlaveDer,"+yytext );return 'tk_llaveDer'; %}
 ";"     %{self.listaTokens.push("PuntoyComa,"+yytext );return 'tk_pyComa'; %}
@@ -87,8 +87,9 @@
 
 [0-9]+("."[0-9]+)?\b  %{self.listaTokens.push("Numero,"+yytext );return 'tk_numero'; %}
 [a-zA-Z]([a-zA-Z0-9_])* %{self.listaTokens.push("Id,"+yytext ); return'tk_id'; %}
-[/][/][\n]*   %{yytext.substr(1,yyleng-2); self.listaTokens.push("ComentarioUni,"+yytext.substr(1,yyleng-2) );return 'tk_comentarioUni'; %}
-[/][*][^*]+[*]+([^/*][^*]*[*]+)*[/] %{yytext.substr(1,yyleng-2) ;self.listaTokens.push("ComentarioMulti,"+yytext.substr(1,yyleng-2) );return 'tk_comentarioMulti'; %}
+
+[/][/]([a-zA-Z0-9_ ])*[\n]*   %{yytext.substr(1,yyleng-2); self.listaTokens.push("ComentarioUni,"+yytext.substr(1,yyleng-2) ); %}
+[/][*][^*]+[*]+([^/*]([a-zA-Z0-9_])*[^*]*[*]+)*[/] %{yytext.substr(1,yyleng-4) ;self.listaTokens.push("ComentarioMulti,"+yytext.substr(1,yyleng-2) ); %}
 
 [\'][^\\\']*([\\][\\\'ntr][^\\\']*)*[\'] %{yytext.substr(1,yyleng-2);self.listaTokens.push("Cadena,"+yytext.substr(1,yyleng-2) );console.log(yytext); return 'tk_cadena'; %}
 "/" %{self.listaTokens.push("Diagonal,"+yytext );return 'tk_Diagonal'; %}
@@ -105,7 +106,8 @@
 %%
 
 INICIO:ARCHIVOBIGIN EOF{  var auxTT=self.listaTokens; self.listaTokens=[];var auxTE=self.erroresLex; self.erroresLex=[]; 
-     return { tabla_Tokens : auxTT, tabla_Errores : auxTE};};
+     return { tabla_Tokens : auxTT, tabla_Errores : auxTE};}
+	 |error EOF;
 
 ARCHIVOBIGIN:IMPORTBIGIN
 		|BIGINCOI
@@ -126,11 +128,12 @@ BIGINCOI: tk_public CI2
     |;
 
 CI2:CLASSBIGIN BIGINCOI 
-	|INTERFACEBIGIN BIGINCOI 
+	|INTERFACEBIGIN BIGINCOI
+	|error CI2 
 	|;
 
 CLASSBIGIN: tk_class tk_id tk_llaveIzq METODOS tk_llaveDer BIGINCOI 
-    |tk_llaveIzq error tk_llaveDer BIGINCOI;
+    | error tk_llaveDer BIGINCOI;
 
 INTERFACEBIGIN:tk_interface tk_id tk_llaveIzq CUERPOINT tk_llaveDer BIGINCOI 
     |tk_llaveIzq error tk_llaveDer BIGINCOI;
@@ -146,6 +149,7 @@ METODOS:MAIN METODOS
 		|;
 
 METODOSP:tk_parenIzq PARAMETROS tk_parenDer tk_llaveIzq CUERPO tk_llaveDer METODOS 
+		|tk_parenIzq error tk_parenDer tk_llaveIzq error tk_llaveDer METODOS 
         |tk_pyComa METODOS 
 		|DECLARACIONP METODOS ;
 
@@ -175,6 +179,7 @@ CUERPO:SIF CUERPO
 	|tk_break tk_pyComa 
 	|tk_continue tk_pyComa 
 	|tk_return RETURNCUE tk_pyComa 
+	|error tk_pyComa
 	|;
 
 IMPRIMIR:tk_system tk_punto tk_out tk_punto PRINTTYPE tk_parenIzq IMPCUE tk_parenDer tk_pyComa 
@@ -254,6 +259,7 @@ F: tk_numero E
     |tk_coma E 
     |IMPCUEP E 
     |tk_parenIzq E tk_parenDer 
+	||tk_parenIzq error tk_parenDer 
     |;
 
 TIPO:tk_void 

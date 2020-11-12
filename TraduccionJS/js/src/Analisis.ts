@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 var parser = require('./a_lex/estructura.js');
 import { RecorridoA } from "./Gramatica/recorridoArbol";
+import {Traduccion} from "./a_sint/ConJison/Traduccion";
 
 let lerror: string[];
 let ltok: string[];
@@ -15,7 +16,11 @@ export function AnalizarJava(entrada: string): String {
     ltok = p.tabla_Tokens;
     lerror = p.tabla_Errores;
     let recorrido=p.ast;
-    traduc="Traduccion"
+    
+    const tr=new Traduccion(ltok); 
+    tr.Trad();
+    traduc=tr.getCodigoTrad();
+
     
     return "exito";
 }

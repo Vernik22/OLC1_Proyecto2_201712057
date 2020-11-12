@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Ctraduc = exports.Lesint = exports.Ltokens = exports.TradJs = exports.AnalizarJava = void 0;
 var parser = require('./a_lex/estructura.js');
+const Traduccion_1 = require("./a_sint/ConJison/Traduccion");
 let lerror;
 let ltok;
 let lersint;
@@ -15,7 +16,9 @@ function AnalizarJava(entrada) {
     ltok = p.tabla_Tokens;
     lerror = p.tabla_Errores;
     let recorrido = p.ast;
-    traduc = "Traduccion";
+    const tr = new Traduccion_1.Traduccion(ltok);
+    tr.Trad();
+    traduc = tr.getCodigoTrad();
     return "exito";
 }
 exports.AnalizarJava = AnalizarJava;
